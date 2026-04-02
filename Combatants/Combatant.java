@@ -27,10 +27,9 @@ public abstract class Combatant implements StatusEffect, Action{
 		if (curHP <= 0) { curHP = 0; }
 	}
 	public void takeTurn(BattleEngine engine) {
-		if (canAct()) {
-			engine.processTurn(this);
-	    }
-		
+		engine.processRound();
+		if (!canAct()) return; 
+		engine.processTurn(this);
 	}
 	public void heal(int amount) {
 		curHP += amount;
