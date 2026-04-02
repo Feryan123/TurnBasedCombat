@@ -1,6 +1,8 @@
 package Combatants;
 
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Player extends Combatant {
 	private Inventory inventory;
@@ -10,25 +12,26 @@ public abstract class Player extends Combatant {
 	}
 
 	public void takeTurn(BattleEngine engine) {
-		if (!canAct()) return;
-
-	    engine.applyTurnStartEffects(this);
-
+		super(engine);
+		
 	    Action action = chooseAction();
-	    action.execute(this, engine);
+	    List<Combatants> targets = engine.getAliveCombatants();
+		for (Combatant target : targets) {
+			action.execute(this, target, engine);
+		}
 
 	    engine.processTurn();
 	}
 	
-	public Action chooseAction() {
+	public Action chooseAction(int choice) {
 		Scanner sc = new Scanner(System.in);
 		int action = sc.nextInt();
 		
 		switch (action) {
-			case 1 -> return new UseItemAction();
-			case 2 -> return new DefendAction();
-			case 3 -> return new SpecialSkillAction();
-			default -> return new BasicAttack();
+			case 1 : return new UseItemAction(); break;
+			case 2 : return new DefendAction(); break;
+			case 3 : return new SpecialSkillAction(); break;
+			default : return new BasicAttack(); break;
 		}
 	}
 	
