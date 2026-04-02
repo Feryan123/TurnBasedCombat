@@ -23,7 +23,7 @@ public abstract class Player extends Combatant {
 	    engine.processTurn();
 	}
 	
-	public Action chooseAction(int choice) {
+	public Action chooseAction() {
 		Scanner sc = new Scanner(System.in);
 		int action = sc.nextInt();
 		
