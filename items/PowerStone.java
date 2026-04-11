@@ -1,3 +1,4 @@
+package Items;
 public class PowerStone implements Item {
     // Attribute
     private Combatant singleTarget;

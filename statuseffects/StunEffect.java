@@ -1,3 +1,4 @@
+package StatusEffects;
 public class StunEffect extends StatusEffect{
     // Constructor
     public StunEffect(int duration){
@@ -6,11 +7,15 @@ public class StunEffect extends StatusEffect{
 
     // Methods
     @Override
-    public void apply(Combatant target){
+    public void onApply(Combatant target){
         target.setCanAct(false);
     }
     @Override
     public void onExpire(Combatant target){
         target.setCanAct(true);
+    }
+    @Override
+    public boolean preventsAction(){
+        return true;
     }
 }

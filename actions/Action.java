@@ -1,4 +1,4 @@
-package SC2002.src.actions;
+package Actions;
 
 public interface Action {
     void execute(Combatant user, Combatant target);

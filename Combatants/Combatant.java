@@ -2,8 +2,10 @@ package Combatants;
 
 import java.util.ArrayList;
 import java.util.List;
+import StatusEffects.StatusEffect;
+import Items.Inventory;
 
-public abstract class Combatant implements StatusEffect, Action{
+public abstract class Combatant{
 	private String name;
 	private int maxHP;
 	private int curHP;
@@ -11,6 +13,7 @@ public abstract class Combatant implements StatusEffect, Action{
 	private int def;
 	private int speed;
 	private int skillcd;
+	private boolean damageImmune = false;
 	private List<StatusEffect> effects = new ArrayList<>();
 	
 	public Combatant(String combatantName, int HP, int Atk, int Def, int Speed) {
@@ -23,6 +26,7 @@ public abstract class Combatant implements StatusEffect, Action{
 		this.skillcd = 0;
 	}
 	public void takeDamage(int amount) {
+		if (damageImmune) { return; }
 		curHP -= Math.max(0, amount - def);
 		if (curHP <= 0) { curHP = 0; }
 	}
@@ -66,5 +70,20 @@ public abstract class Combatant implements StatusEffect, Action{
 	        	removeExpiredEffect(effect);
 	        }
 	    }
+	}
+	public void setIsDamageImmune(boolean isImmune) {
+		damageImmune = isImmune;
+	}
+	public void increaseDefense(int amount) {
+		this.def += amount;
+	}
+	public void decreaseDefense(int amount) {
+		this.def -= amount;
+	}
+	public void addEffect(StatusEffect effect) {
+		effects.add(effect);
+	}
+	public void removeEffect(StatusEffect effect) {
+		effects.remove(effect);
 	}
 }

@@ -1,3 +1,4 @@
+package Items;
 public class Inventory {
     private List<Item> items;
 

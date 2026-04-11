@@ -1,3 +1,4 @@
+package Items;
 public class Potion implements Item {
     private int healAmount = 100;
     

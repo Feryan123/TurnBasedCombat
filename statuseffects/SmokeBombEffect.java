@@ -1,3 +1,4 @@
+package StatusEffects;
 public class SmokeBombEffect extends StatusEffect {
     // Constructor
     public SmokeBombEffect(){
@@ -6,7 +7,7 @@ public class SmokeBombEffect extends StatusEffect {
 
     // Methods
     @Override
-    public void apply(Combatant target){
+    public void onApply(Combatant target){
         target.setIsDamageImmune(true); // Set if user is damage immune --> TBA in Combatant class
     }
     @Override

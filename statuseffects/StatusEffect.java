@@ -1,3 +1,4 @@
+package StatusEffects;
 public abstract class StatusEffect {
     // Attributes
     private String name;
@@ -18,7 +19,10 @@ public abstract class StatusEffect {
         this.duration--;
     }
     // Methods
-    public abstract void apply(Combatant target);
-    public void onExpire(Combatant target){}
+    public abstract void onApply(Combatant target);
+    public abstract void onExpire(Combatant target);
+    public boolean preventsAction(){return false;}
+    public boolean isExpired(){return this.duration <= 0;}
+
 
 }

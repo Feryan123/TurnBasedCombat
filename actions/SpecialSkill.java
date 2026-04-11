@@ -1,3 +1,4 @@
+package Actions;
 import java.util.List;
 
 public class SpecialSkill implements Action {
@@ -17,14 +18,16 @@ public class SpecialSkill implements Action {
 
     // Methods
     @Override
-    public void execute(Combatant user, Combatant target){
-        if(!user.getCanAct()) return;
-        if (user instanceof Warrior){
-            if(((Warrior) user).getSkillCooldown() != 0) return;
-            ((Warrior) user).shieldBash(singleTarget);
+    public void execute(Combatant user, Combatant target) {
+        if (!user.canAct()) return; // Check if user can act
+        if (singleTarget == null && (multiTargets == null || multiTargets.isEmpty())) return; 
+
+        if (user instanceof Warrior) {
+            if (((Warrior) user).getSkillCooldown() != 0) return; // Check cooldown
+            ((Warrior) user).shieldBash(singleTarget); // Execute Warrior's skill
         } else if (user instanceof Wizard) {
-            if(((Wizard) user).getSkillCooldown() != 0) return;
-            ((Wizard) user).arcaneBlast(multiTargets);
+            if (((Wizard) user).getSkillCooldown() != 0) return; // Check cooldown
+            ((Wizard) user).arcaneBlast(multiTargets); // Execute Wizard's skill
         }
     }
 }

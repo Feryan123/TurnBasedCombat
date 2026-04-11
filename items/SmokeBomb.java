@@ -1,3 +1,4 @@
+package Items;
 public class SmokeBomb implements Item {
     // Methods
     @Override

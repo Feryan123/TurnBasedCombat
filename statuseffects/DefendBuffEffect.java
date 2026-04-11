@@ -1,3 +1,4 @@
+package StatusEffects;
 public class DefendBuffEffect extends StatusEffect {
     // Constructor
     public DefendBuffEffect(){
@@ -6,7 +7,7 @@ public class DefendBuffEffect extends StatusEffect {
 
     // Methods
     @Override
-    public void apply(Combatant target){
+    public void onApply(Combatant target){
         target.increaseDefense(10);
     }
     @Override
