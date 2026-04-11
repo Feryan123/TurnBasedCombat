@@ -49,19 +49,17 @@ public class BattleEngine {
             ui.displayActionMenu();
             int choice = ui.getPlayerChoice();
 
-            Action action = switch (choice) {
-                case 1 -> new BasicAttack();
-                case 2 -> new Defend();
-                case 3 -> new UseItem();
-                case 4 -> new SpecialSkill();
-                default -> new BasicAttack();
-            };
-
-            Combatant target = selectTarget(); 
-            action.execute(actor, target);
+            Combatant target = selectTarget();
+            if (target != null) {
+                Action action = new BasicAttack();
+                action.execute(actor, target);
+            }
         } else if (actor instanceof Enemy) {
-            Combatant target = selectPlayerTarget(); 
-            new BasicAttack().execute(actor, target);
+            Combatant target = selectPlayerTarget();
+            if (target != null) {
+                Action action = new BasicAttack();
+                action.execute(actor, target);
+            }
         }
     }
 
