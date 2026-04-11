@@ -63,9 +63,11 @@ public class BattleEngine {
         }
     }
 
-    private Combatant selectTarget() {
-        // Placeholder for target selection logic
-        return combatants.stream().filter(Combatant::isAlive).findFirst().orElse(null);
+    public Combatant selectTarget() {
+        return combatants.stream()
+                .filter(c -> c instanceof Enemy && c.isAlive())
+                .findFirst()
+                .orElse(null);
     }
 
     private Combatant selectPlayerTarget() {
