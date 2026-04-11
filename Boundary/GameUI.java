@@ -174,8 +174,9 @@ public class GameUI {
                 role = "Combatant";
             }
 
-            System.out.println(role + ": " + combatant.getClass().getSimpleName());
-            System.out.println("ATK: " + combatant.getAttack()
+            System.out.println(role + ": " + combatant.getName());
+            System.out.println("HP: " + combatant.getCurrentHP() + "/" + combatant.getMaxHP()
+                    + " | ATK: " + combatant.getAttack()
                     + " | DEF: " + combatant.getDefense()
                     + " | SPD: " + combatant.getSpeed()
                     + " | Alive: " + combatant.isAlive());

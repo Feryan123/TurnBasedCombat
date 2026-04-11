@@ -5,7 +5,8 @@ import Combatants.Player;
 import LevelSetup.Difficulty;
 import LevelSetup.Level;
 import Items.Item;
-import strategy.TurnOrderStrategy;
+import Strategy.TurnOrderStrategy;
+import Strategy.SpeedBasedTurnOrder;
 import LevelSetup.EnemyFactory;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class GameController {
 
     public GameController() {
         ui = new GameUI();
-        battleEngine = new BattleEngine(new SpeedBasedTurnOrder());
+        battleEngine = new BattleEngine(new java.util.ArrayList<>(), new SpeedBasedTurnOrder(new java.util.ArrayList<>()));
     }
 
     public void startGame() {

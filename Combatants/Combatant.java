@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import StatusEffects.StatusEffect;
 import Items.Inventory;
+import Control.BattleEngine;
 
 public abstract class Combatant{
 	private String name;
@@ -23,6 +24,19 @@ public abstract class Combatant{
 		this.def = Def;
 		this.speed = Speed;
 	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public int getCurrentHP() {
+		return this.curHP;
+	}
+
+	public int getMaxHP() {
+		return this.maxHP;
+	}
+
 	public void takeDamage(int amount) {
 		if (damageImmune) { return; }
 		curHP -= Math.max(0, amount - def);
