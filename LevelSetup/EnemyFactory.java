@@ -5,16 +5,14 @@ import java.util.List;
 
 public class EnemyFactory implements IEnemyFactory{
 
+    @Override
     public Goblin createGoblin() {
-        // TODO: Ping Jin needs to create constructors, that I'll call w the below stats
-        // Required Stats: HP: 55, Attack: 35, Defense: 15, Speed: 25
-        return null; 
+        return new Goblin("Goblin"); // Instantiate Goblin with default stats
     }
 
+    @Override
     public Wolf createWolf() {
-        // TODO: Ping Jin needs to create constructors, that I'll call w the below stats
-        // Required Stats: HP: 40, Attack: 45, Defense: 5, Speed: 35
-        return null; 
+        return new Wolf("Wolf"); // Instantiate Wolf with default stats
     }
 
     
