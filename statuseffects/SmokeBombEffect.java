@@ -1,4 +1,7 @@
 package StatusEffects;
+
+import Combatants.*;
+
 public class SmokeBombEffect extends StatusEffect {
     // Constructor
     public SmokeBombEffect(){

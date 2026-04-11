@@ -1,4 +1,8 @@
 package Actions;
+
+import Combatants.*;
+
+
 public class BasicAttack implements Action {
     // Methods
     @Override

@@ -12,7 +12,6 @@ public abstract class Combatant{
 	private int atk;
 	private int def;
 	private int speed;
-	private int skillcd;
 	private boolean damageImmune = false;
 	private List<StatusEffect> effects = new ArrayList<>();
 	
@@ -23,7 +22,6 @@ public abstract class Combatant{
 		this.atk = Atk;
 		this.def = Def;
 		this.speed = Speed;
-		this.skillcd = 0;
 	}
 	public void takeDamage(int amount) {
 		if (damageImmune) { return; }
@@ -62,15 +60,6 @@ public abstract class Combatant{
 	        effect.onApply(this);
 	    }
 	}
-	public void decrementCooldown() { 
-		if (skillcd > 0) { skillcd--; } 
-		for (StatusEffect effect : effects) {
-	        if (effect.isExpired()) {
-	        	effect.onExpire();
-	        	removeExpiredEffect(effect);
-	        }
-	    }
-	}
 	public void setIsDamageImmune(boolean isImmune) {
 		damageImmune = isImmune;
 	}
@@ -80,6 +69,12 @@ public abstract class Combatant{
 	public void decreaseDefense(int amount) {
 		this.def -= amount;
 	}
+	public void increaseAttack(int amount) {
+		this.atk += amount;
+	}
+	public int getSpeed(){return this.speed;}
+	public int getAttack(){return this.atk;}
+	public int getDefense(){return this.def;}
 	public void addEffect(StatusEffect effect) {
 		effects.add(effect);
 	}

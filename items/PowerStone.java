@@ -1,4 +1,8 @@
 package Items;
+
+import Combatants.*;
+import java.util.List;
+
 public class PowerStone implements Item {
     // Attribute
     private Combatant singleTarget;

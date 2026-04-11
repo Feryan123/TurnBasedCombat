@@ -1,25 +1,22 @@
 package Combatants;
 
-public class Wizard extends Player {
-	private int arcaneBlastBonus = 0;
-	
+import java.util.List;
+import Actions.*;
+import StatusEffects.*;
 
+public class Wizard extends Player {
+	
 	public Wizard(String combatantName) {
-		int HP = 200;
-		int Atk = 50;
-		int Def = 10;
-		int Speed = 20;
-		super(combatantName, HP, Atk, Def, Speed);
+		super("Wizard", 200, 50, 10, 20);
 	}
 	
-	public void useSpecialSkill(List<Combatant> targets, BattleEngine engine) {
-		int kills = 0;
+	public void arcaneBlast(List<Enemy> targets){
+        int kills = 0;
 		for (Combatant target: targets) {
-			new BasicAttack().execute(this, target, engine);
+			new BasicAttack().execute(this, target);
 			if (!target.isAlive()) { kills++; }
 		}
-		increaseAttack(kills * 10);
-	}
-	
-	public void increaseAttack(int amount) { arcaneBlastBonus += amount; }
+		this.addEffect(new ArcaneBuffEffect(kills));
+        resetSkillCooldown(3);
+    }
 }

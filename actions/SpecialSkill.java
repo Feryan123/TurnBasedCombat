@@ -1,5 +1,7 @@
 package Actions;
+
 import java.util.List;
+import Combatants.*;
 
 public class SpecialSkill implements Action {
     // Attributes

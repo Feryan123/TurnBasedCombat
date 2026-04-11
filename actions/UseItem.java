@@ -1,4 +1,8 @@
 package Actions;
+
+import Items.*;
+import Combatants.*;
+
 public class UseItem implements Action {
     // Attributes
     private Item item;

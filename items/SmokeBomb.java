@@ -1,4 +1,8 @@
 package Items;
+
+import Combatants.*;
+import StatusEffects.*;
+
 public class SmokeBomb implements Item {
     // Methods
     @Override

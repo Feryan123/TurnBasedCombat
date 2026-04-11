@@ -2,6 +2,9 @@ package LevelSetup;
 
 import java.util.ArrayList;
 import java.util.List;
+import Combatants.*;
+import LevelSetup.EnemyFactory;
+
 
 public class EnemyFactory implements IEnemyFactory{
 

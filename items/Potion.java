@@ -1,4 +1,8 @@
 package Items;
+
+import Combatants.*;
+
+
 public class Potion implements Item {
     private int healAmount = 100;
     

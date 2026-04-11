@@ -1,4 +1,7 @@
 package StatusEffects;
+
+import Combatants.*;
+
 public class DefendBuffEffect extends StatusEffect {
     // Constructor
     public DefendBuffEffect(){

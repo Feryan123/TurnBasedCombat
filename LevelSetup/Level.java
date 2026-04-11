@@ -2,6 +2,7 @@ package LevelSetup;
 
 import java.util.ArrayList;
 import java.util.List;
+import Combatants.Enemy;
 
 public class Level {
     private Difficulty difficulty;

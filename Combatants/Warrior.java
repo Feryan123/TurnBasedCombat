@@ -1,18 +1,16 @@
 package Combatants;
 
+import StatusEffects.StunEffect;
+
 public class Warrior extends Player{
-	public Warrior(String combatantName) {
-		int HP = 260;
-		int Atk = 40;
-		int Def = 20;
-		int Speed = 30;
-		super(combatantName, HP, Atk, Def, Speed);
+	public Warrior() {
+		super("Warrior", 260, 40, 20, 30);
 	}
 	
-	public void useSpecialSkill(List<Combatant> targets) {
-		for (Combatant target: targets) {
-			new BasicAttack().execute(this, target, engine);
-			target.addStatusEffect(new StunEffect());
-		}
-	}
+    public void shieldBash(Combatant target){
+        int damage = Math.max(0, getAttack() - target.getDefense());
+        target.takeDamage(damage);
+        target.addEffect(new StunEffect(2));
+        resetSkillCooldown(3);
+    }
 }

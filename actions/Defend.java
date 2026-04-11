@@ -1,6 +1,7 @@
 package Actions;
 
 import StatusEffects.DefendBuffEffect;
+import Combatants.*;
 
 public class Defend implements Action {
     // Methods
