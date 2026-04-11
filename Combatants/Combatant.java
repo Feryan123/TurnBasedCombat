@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import StatusEffects.StatusEffect;
 import Items.Inventory;
+import Control.BattleEngine;
 
 public abstract class Combatant{
 	private String name;

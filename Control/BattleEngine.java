@@ -6,18 +6,21 @@ import Strategy.*;
 import LevelSetup.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import Boundary.GameUI;
 
 public class BattleEngine {
     private List<Combatant> combatants;
     private TurnOrderStrategy turnOrderStrategy;
     private Level level;
     private int currentRound;
+    private GameUI ui;
 
     public BattleEngine(List<Combatant> combatants, TurnOrderStrategy turnOrderStrategy) {
         this.combatants = combatants;
-        this.turnOrderStrategy = new SpeedBasedTurnOrder(); 
-        this.level = new Level(Difficulty.MEDIUM); // Initialize Level with a Difficulty -- Placeholder, can be set via GameController
+        this.turnOrderStrategy = turnOrderStrategy;
+        this.level = null;
         this.currentRound = 0;
+        this.ui = new GameUI();
     }
 
     public void startBattle() {
@@ -33,7 +36,7 @@ public class BattleEngine {
 
     public void processRound() {
         currentRound += 1;
-        List<Combatant> turnOrder = turnOrderStrategy.getTurnOrder(getAliveCombatants());
+        List<Combatant> turnOrder = turnOrderStrategy.getOrder(getAliveCombatants());
         for (Combatant actor : turnOrder) {
             if (actor.isAlive()) {
                 processTurn(actor);

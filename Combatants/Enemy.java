@@ -21,4 +21,5 @@ public abstract class Enemy extends Combatant{
 	public Action decideAction(BattleEngine engine) {
 		return new BasicAttack();
 	}
+
 }
