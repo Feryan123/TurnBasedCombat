@@ -145,6 +145,59 @@ public class GameUI {
         }
     }
 
-    
+    public void displayBattleStatus() {
+        System.out.println("======================================");
+        System.out.println("             BATTLE STATUS            ");
+        System.out.println("======================================");
+        System.out.println("Battle status display not wired yet.");
+        System.out.println();
+    }
+
+    public void displayBattleStatus(List<Combatant> combatants) {
+        System.out.println("======================================");
+        System.out.println("             BATTLE STATUS            ");
+        System.out.println("======================================");
+
+        if (combatants == null || combatants.isEmpty()) {
+            System.out.println("No combatants to display.");
+            System.out.println();
+            return;
+        }
+
+        for (Combatant combatant : combatants) {
+            String role;
+            if (combatant instanceof Player) {
+                role = "Player";
+            } else if (combatant instanceof Enemy) {
+                role = "Enemy";
+            } else {
+                role = "Combatant";
+            }
+
+            System.out.println(role + ": " + combatant.getClass().getSimpleName());
+            System.out.println("ATK: " + combatant.getAttack()
+                    + " | DEF: " + combatant.getDefense()
+                    + " | SPD: " + combatant.getSpeed()
+                    + " | Alive: " + combatant.isAlive());
+            System.out.println("--------------------------------------");
+        }
+
+        System.out.println();
+    }
+
+    public void showMessage(String message) {
+        System.out.println(message);
+    }
+
+    public void showItems(List<Item> items) {
+        if (items == null || items.isEmpty()) {
+            System.out.println("No items available.");
+            return;
+        }
+
+        for (int i = 0; i < items.size(); i++) {
+            System.out.println((i + 1) + ". " + items.get(i).getName());
+        }
+    }
 
 }
