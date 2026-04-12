@@ -1,5 +1,8 @@
 package Combatants;
 
+import Actions.BasicAttack;
+import StatusEffects.StunEffect;
+
 public class Warrior extends Player{
 	public Warrior(String combatantName) {
 		int HP = 260;
@@ -9,10 +12,8 @@ public class Warrior extends Player{
 		super(combatantName, HP, Atk, Def, Speed);
 	}
 	
-	public void useSpecialSkill(List<Combatant> targets) {
-		for (Combatant target: targets) {
-			new BasicAttack().execute(this, target, engine);
-			target.addStatusEffect(new StunEffect());
-		}
+	public void useSpecialSkill(Combatant target) {
+		new BasicAttack().execute(this, target);
+		target.addStatusEffect(new StunEffect(2));
 	}
 }
