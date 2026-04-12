@@ -1,8 +1,10 @@
 package Combatants;
 
+import java.util.List;
+
+import actions.BasicAttack;
+
 public class Wizard extends Player {
-	private int arcaneBlastBonus = 0;
-	
 
 	public Wizard(String combatantName) {
 		int HP = 200;
@@ -12,14 +14,11 @@ public class Wizard extends Player {
 		super(combatantName, HP, Atk, Def, Speed);
 	}
 	
-	public void useSpecialSkill(List<Combatant> targets, BattleEngine engine) {
-		int kills = 0;
+	@Override
+	public void useSpecialSkill(List<Enemy> targets) {
 		for (Combatant target: targets) {
-			new BasicAttack().execute(this, target, engine);
-			if (!target.isAlive()) { kills++; }
+			new BasicAttack().execute(this, target);
+			if (!target.isAlive()) { increaseAttack(10); }
 		}
-		increaseAttack(kills * 10);
 	}
-	
-	public void increaseAttack(int amount) { arcaneBlastBonus += amount; }
 }
