@@ -3,45 +3,48 @@ package Combatants;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import actions.*;
+import Control.*;
+import items.*;
+import statuseffects.*;
 
 public abstract class Player extends Combatant {
 	private Inventory inventory;
+	private List<Item> items = new ArrayList<>();
+	private int skillCD = 0;
 	
 	public Player(String combatantName, int HP, int Atk, int Def, int Speed) {
 		super(combatantName, HP, Atk, Def, Speed);
 	}
-
-	public void takeTurn(BattleEngine engine) {
-		super(engine);
-		
-	    Action action = chooseAction();
-	    List<Combatants> targets = engine.getAliveCombatants();
-		for (Combatant target : targets) {
-			action.execute(this, target, engine);
-		}
-
-	    engine.processTurn();
+	
+	public Action chooseAction(Action action) {
+		return action;
 	}
 	
-	public Action chooseAction() {
-		Scanner sc = new Scanner(System.in);
-		int action = sc.nextInt();
-		
-		switch (action) {
-			case 1 : return new UseItemAction(); break;
-			case 2 : return new DefendAction(); break;
-			case 3 : return new SpecialSkillAction(); break;
-			default : return new BasicAttack(); break;
-		}
-	}
-	
-	public void useSpecialSkill(List<Combatant> targets, BattleEngine engine) {
+	public void useSpecialSkill(List<Enemy> targets) {
 		for (Combatant target: targets) {
-			new BasicAttack().execute(this, target, engine);
+			new BasicAttack().execute(this, target);
 		}
 	}
+	
+	@Override
+	public void decrementCooldown() { 
+		if (skillCD > 0) { skillCD--; } 
+		for (StatusEffect effect : getEffects()) {
+	        if (effect.isExpired()) {
+	        	effect.onExpire(this);
+	        	removeExpiredEffect();
+	        }
+	    }
+	}
+	
+	public void resetSkillCooldown(int cooldown) { skillCD = 0; }
 	
 	public Inventory getInventory() { return inventory; }
-	
-}
+	public int getSkillCooldown() { return skillCD; }
 
+	public void removeItem(Item item) { items.remove(item); }
+
+	public void setItems(List<Item> Items) { items = Items; }
+
+}
