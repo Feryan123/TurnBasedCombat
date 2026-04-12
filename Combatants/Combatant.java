@@ -3,16 +3,28 @@ package Combatants;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Combatant implements StatusEffect, Action{
+import actions.*;
+import Control.*;
+import statuseffects.*;
+
+public abstract class Combatant implements Action{
 	private String name;
 	private int maxHP;
 	private int curHP;
 	private int atk;
 	private int def;
 	private int speed;
-	private int skillcd;
+	private boolean immunity;
 	private List<StatusEffect> effects = new ArrayList<>();
 	
+	public int getAttack() { return atk; }
+	public int getDefense() { return def; }
+	public String getName() { return name; }
+	public int getCurrentHP() { return curHP; }
+	public int getMaxHP() { return maxHP; }
+	public int getSpeed() { return speed; }
+	public List<StatusEffect> getEffects() { return effects; }
+
 	public Combatant(String combatantName, int HP, int Atk, int Def, int Speed) {
 		this.name = combatantName;
 		this.maxHP = HP;
@@ -20,10 +32,10 @@ public abstract class Combatant implements StatusEffect, Action{
 		this.atk = Atk;
 		this.def = Def;
 		this.speed = Speed;
-		this.skillcd = 0;
+		this.immunity = false;
 	}
 	public void takeDamage(int amount) {
-		curHP -= Math.max(0, amount - def);
+		curHP -= Math.max(0, amount);
 		if (curHP <= 0) { curHP = 0; }
 	}
 	public void takeTurn(BattleEngine engine) {
@@ -40,7 +52,7 @@ public abstract class Combatant implements StatusEffect, Action{
 	public boolean isAlive() { return curHP > 0; }
 	public boolean canAct() { 
 		if (isAlive()) {
-			for (StatusEffect effect : effects) {
+			for (StatusEffect effect : getEffects()) {
 		        if (effect.preventsAction()) { return false; }
 		    }
 			return true;
@@ -48,23 +60,30 @@ public abstract class Combatant implements StatusEffect, Action{
 		return false;
 	}
 	public void addStatusEffect(StatusEffect effect) {
-		effects.add(effect);
+		getEffects().add(effect);
 	}
+
 	public void removeExpiredEffect() {
-		effects.removeIf(effect -> effect.isExpired());
+		getEffects().removeIf(effect -> effect.isExpired());
 	}
 	public void applyStatusEffect() {
-		for (StatusEffect effect : effects) {
+		for (StatusEffect effect : getEffects()) {
 	        effect.onApply(this);
 	    }
 	}
+	
 	public void decrementCooldown() { 
-		if (skillcd > 0) { skillcd--; } 
-		for (StatusEffect effect : effects) {
+		for (StatusEffect effect : getEffects()) {
 	        if (effect.isExpired()) {
-	        	effect.onExpire();
-	        	removeExpiredEffect(effect);
+	        	effect.onExpire(this);
+	        	removeExpiredEffect();
 	        }
 	    }
 	}
+	
+	public void setIsDamageImmune(boolean op) { immunity = op; }
+	public void increaseDefense(int value) { def += value; }
+	public void decreaseDefense(int value) { def -= value; }
+	public void increaseAttack(int amount) { atk += amount; }
+	
 }
