@@ -2,40 +2,63 @@ package Combatants;
 
 import Items.Inventory;
 import Items.Item;
+import Actions.Action;
+import java.util.List;
+import Control.BattleEngine;
 
 public abstract class Player extends Combatant {
-    private int skillcd;
+    // Attributes
+    private int specialSkillCooldown;
+    private Action specialSkill;
     private Inventory inventory;
 
-    public Player(String combatantName, int HP, int Atk, int Def, int Speed) {
+    // Constructor
+    public Player(String combatantName, int HP, int Atk, int Def, int Speed, Action specialSkill) {
         super(combatantName, HP, Atk, Def, Speed);
-        this.skillcd = 0;
+        this.specialSkillCooldown = 0;
         this.inventory = new Inventory();
     }
 
+    // Getter
+    public int getSkillCooldown() {return this.specialSkillCooldown;}
+    public Inventory getInventory() {return inventory;}
+    public Action getSpecialSkill(Combatant target) {return this.specialSkill;}
+
+    // Increase/Decrease Stats
+	public void increaseDefense(int amount) {
+		this.setDefense(this.getDefense() + amount);}
+	public void decreaseDefense(int amount) {
+		this.setDefense(this.getDefense() - amount);
+	}
+	public void increaseAttack(int amount) {
+		this.setAttack(this.getAttack() + amount);
+	}
+	public void heal(int amount) {
+		this.setCurrentHP(this.getCurrentHP() + amount);
+	}
     public void decrementCooldown() {
-        if (skillcd > 0) {
-            skillcd--;
+        if (specialSkillCooldown > 0) {
+            specialSkillCooldown--;
         }
     }
+    public void resetSkillCooldown(int cooldown) {
+        this.specialSkillCooldown = cooldown;
+    }
 
+    // Methods - Items
     public void addItem(Item item) {
         inventory.addItem(item);
     }
-
     public void removeItem(Item item) {
         inventory.removeItem(item);
+    }    
+
+    // Methods - Special Skill
+    public void useSpecialSkill() {
+        if(specialSkillCooldown > 0) return; 
+        List<Combatant> targets = BattleEngine.selectEnemyTargets(); // To be fixed: Need to return a List of Combatant, not a single Combatant. If only one target, return a list with that target as the only element.
+        specialSkill.execute(this, targets);
+        resetSkillCooldown(3);
     }
 
-    public void resetSkillCooldown(int cooldown) {
-        this.skillcd = cooldown;
-    }
-
-    public int getSkillCooldown() {
-        return this.skillcd;
-    }
-
-    public Inventory getInventory() {
-        return inventory;
-    }
 }

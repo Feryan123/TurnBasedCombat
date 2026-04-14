@@ -7,7 +7,7 @@ public class Potion implements Item {
     
     // Methods
     @Override
-    public void use(Combatant user){
+    public void use(Player user){
         user.heal(healAmount);
     }
     @Override

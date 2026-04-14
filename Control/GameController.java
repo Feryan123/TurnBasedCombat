@@ -32,13 +32,7 @@ public class GameController {
         ui.showMessage("");
 
         List<Item> items = ui.displayItemOptions();
-        for (Item item : items) {
-            player.addItem(item);
-        }
-
-        ui.showMessage("Your starting items are:");
-        ui.showItems(player.getInventory().getItems());
-
+        player.getInventory(items);
         Difficulty difficulty = ui.displayDifficultyOptions();
         Level level = new Level(difficulty, new EnemyFactory());
 

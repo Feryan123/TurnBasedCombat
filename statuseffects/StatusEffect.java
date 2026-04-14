@@ -26,6 +26,5 @@ public abstract class StatusEffect {
     public abstract void onExpire(Combatant target);
     public boolean preventsAction(){return false;}
     public boolean isExpired(){return this.duration <= 0;}
-
-
+    public void onEndTurn(){decrementDuration();}
 }

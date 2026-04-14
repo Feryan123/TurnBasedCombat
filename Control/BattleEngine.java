@@ -71,7 +71,7 @@ public class BattleEngine {
         }
     }
 
-    public Combatant selectTarget() {
+    public Combatant selectEnemyTargets() { // To be fixed: Need to return a List of Combatant, not a single Combatant. If only one target, return a list with that target as the only element.
         return combatants.stream()
                 .filter(c -> c instanceof Enemy && c.isAlive())
                 .findFirst()

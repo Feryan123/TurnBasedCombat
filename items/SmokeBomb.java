@@ -6,8 +6,8 @@ import StatusEffects.*;
 public class SmokeBomb implements Item {
     // Methods
     @Override
-    public void use(Combatant user){
-        user.addEffect(new SmokeBombEffect());
+    public void use(Player user){
+        user.addStatusEffect(new SmokeBombEffect());
     }
     @Override
     public String getName() {
