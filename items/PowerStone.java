@@ -1,11 +1,15 @@
 package Items;
 
+import java.util.List;
+import Combatants.Combatant;
 import Combatants.Player;
+import Actions.Action;
 
 public class PowerStone implements Item {
     @Override
-    public void use(Player user) {
-        user.resetSkillCooldown(0);
+    public void use(Player user, List<Combatant> targets) {
+        Action specialSkill = user.getSpecialSkill();
+        specialSkill.execute(user, targets);
     }
 
     @Override

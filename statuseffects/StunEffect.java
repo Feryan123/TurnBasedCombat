@@ -11,12 +11,12 @@ public class StunEffect extends StatusEffect{
     // Methods
     @Override
     public void onApply(Combatant target) {
-        target.addStatusEffect(this);
     }
+
     @Override
     public void onExpire(Combatant target) {
-        target.removeExpiredEffects();
     }
+    
     @Override
     public boolean preventsAction(){
         return true;

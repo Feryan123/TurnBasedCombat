@@ -92,13 +92,17 @@ public abstract class Combatant{
 	public boolean isAlive() { return currentHP > 0; }
 	
 	public boolean canAct() { 
-		if (isAlive()) {
-			for (StatusEffect effect : effects) {
-		        if (effect.preventsAction()) { return false; }
-		    }
-			return true;
+		if (!isAlive()) {
+			return false;
 		}
-		return false;
+
+		for (StatusEffect effect : effects) {
+			if (effect.preventsAction()) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public void increaseDefense(int amount) {

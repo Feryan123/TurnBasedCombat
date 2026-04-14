@@ -12,7 +12,7 @@ public class SmokeBombEffect extends StatusEffect {
     @Override
     public void onApply(Combatant target){
         target.setIsDamageImmune(true);
-        System.out.println(target.getName() + " is immune to damage this turn!");
+        System.out.println(target.getName() + " is now invisible and immune to damage!");
     }
     @Override
     public void onExpire(Combatant target){

@@ -7,7 +7,8 @@ import LevelSetup.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import Boundary.GameUI;
-import Items.Item;
+import Items.PowerStone;
+import Items.Item;  
 import java.util.ArrayList;
 
 public class BattleEngine {
@@ -56,6 +57,9 @@ public class BattleEngine {
         for (Combatant combatant : combatants) {
             if (combatant instanceof Player && combatant.isAlive()) {
                 Player player = (Player) combatant;
+                if (player.getSkillCooldown() > 0) {
+                    player.decrementCooldown();
+                }
                 boolean validChoice = false;
 
                 while (!validChoice) {
@@ -99,13 +103,33 @@ public class BattleEngine {
                             }
 
                             Item selectedItem = items.get(itemChoice - 1);
-                            queuedPlayerAction = new UseItemAction(selectedItem);
+                            List<Combatant> itemTargets = new ArrayList<>();
+
+                            if (selectedItem instanceof PowerStone) {
+                                Action specialSkill = player.getSpecialSkill();
+
+                                if (specialSkill instanceof ArcaneBlastAction) {
+                                    itemTargets = selectEnemyTargets();
+                                } else {
+                                    List<Combatant> possibleTargets = selectEnemyTargets();
+                                    if (!possibleTargets.isEmpty()) {
+                                        ui.displayTargetOptions(possibleTargets);
+                                        Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
+                                        itemTargets.add(chosenTarget);
+                                    }
+                                }
+                            }
+                            
+                            ui.showMessage(player.getName() + " used " + selectedItem.getName() + "!");
+                            Action action = new UseItemAction(selectedItem);
+                            action.execute(player, itemTargets);
+                            
+                            queuedPlayerAction = null;
                             queuedPlayerTargets.clear();
-                            ui.showMessage(player.getName() + " selected " + selectedItem.getName() + ".");
+
                             itemChosen = true;
                             validChoice = true;
                         }
-
                     } else if (choice == 4) {
                         if (player.getSkillCooldown() > 0) {
                             ui.showMessage("Special Skill is on cooldown. Choose another action.");
@@ -160,13 +184,13 @@ public class BattleEngine {
 
                 if (queuedPlayerAction instanceof BasicAttack && !queuedPlayerTargets.isEmpty()) {
                     ui.showMessage(actor.getName() + " attacked " + queuedPlayerTargets.get(0).getName() + "!");
-                }
-                else if (queuedPlayerAction instanceof SpecialSkillAction) {
-                    ui.showMessage(actor.getName() + " used a special skill!");
+                } else if (queuedPlayerAction instanceof ShieldBashAction && !queuedPlayerTargets.isEmpty()) {
+                    ui.showMessage(actor.getName() + " used Shield Bash on " + queuedPlayerTargets.get(0).getName() + "!");
+                    player.resetSkillCooldown(3);
+                } else if (queuedPlayerAction instanceof ArcaneBlastAction) {
+                    ui.showMessage(actor.getName() + " used Arcane Blast!");
                     player.resetSkillCooldown(3);
                 }
-
-                player.decrementCooldown();
             }
         } else if (actor instanceof Enemy) {
             List<Combatant> targets = selectPlayerTargets();
@@ -183,6 +207,7 @@ public class BattleEngine {
             }
         }
         actor.endTurnStatusEffect();
+        spawnBackupIfNeeded();
     }
 
     public List<Combatant> selectEnemyTargets() {
@@ -211,6 +236,14 @@ public class BattleEngine {
         return combatants.stream()
                 .filter(c -> c.isAlive())
                 .collect(Collectors.toList());
+    }
+
+    public void spawnBackupIfNeeded() {
+        if (level != null && level.shouldSpawnBackup()) {
+            List<Enemy> backupEnemies = level.spawnBackupEnemies();
+            combatants.addAll(backupEnemies);
+            ui.showMessage("Backup enemies have arrived!");
+        }
     }
 
 }
