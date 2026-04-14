@@ -31,7 +31,7 @@ public class GameController {
         List<Item> items = ui.displayItemOptions();
         player.setItems(items);
         Difficulty difficulty = ui.displayDifficultyOptions();
-        Level level = LevelFactory.createLevel(difficulty);
+        Difficulty level = ui.displayDifficultyOptions();
         battleEngine.initialise(player, level);
     }
 
@@ -43,4 +43,9 @@ public class GameController {
         setupGame();
         startBattle();
     }
+    
+    static void main() {
+    	GameController newGame = new GameController();
+		newGame.startGame();
+	}
 }
