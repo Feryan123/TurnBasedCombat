@@ -39,6 +39,7 @@ public class EnemyFactory implements IEnemyFactory{
                 // Initial Spawn: 3 Goblins
                 enemies.add(createGoblin());
                 enemies.add(createGoblin());
+                enemies.add(createGoblin());
                 break;
             case MEDIUM:
                 // Initial Spawn: 1 Goblin, 1 Wolf
@@ -46,10 +47,9 @@ public class EnemyFactory implements IEnemyFactory{
                 enemies.add(createWolf());
                 break;
             case HARD:
-                // Initial spawn: 1 Goblin, 2 Wolves
+                // Initial spawn: 2 Goblins
                 enemies.add(createGoblin());
-                enemies.add(createWolf());
-                enemies.add(createWolf());
+                enemies.add(createGoblin());
                 break;
         }
         
