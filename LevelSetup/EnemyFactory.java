@@ -46,7 +46,7 @@ public class EnemyFactory implements IEnemyFactory{
                 enemies.add(createWolf());
                 break;
             case HARD:
-                // Initial spawn: 2 Goblins
+                // Initial spawn: 1 Goblin, 2 Wolves
                 enemies.add(createGoblin());
                 enemies.add(createWolf());
                 enemies.add(createWolf());
