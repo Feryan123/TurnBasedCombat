@@ -7,7 +7,7 @@ public class SmokeBomb implements Item {
     // Methods
     @Override
     public void use(Combatant user){
-        user.addEffect(new SmokeBombEffect());
+        user.addStatusEffect(new SmokeBombEffect());
     }
     @Override
     public String getName() {
