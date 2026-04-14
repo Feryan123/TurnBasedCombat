@@ -90,4 +90,9 @@ public class BattleEngine {
                 .filter(c -> c.isAlive())
                 .collect(Collectors.toList());
     }
+
+	public void initialise(Player player, Difficulty level2) {
+		BattleEngine engine = new BattleEngine(combatants, turnOrderStrategy);
+		
+	}
 }
