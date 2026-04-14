@@ -69,10 +69,12 @@ public class GameUI {
     }
 
     public Difficulty displayDifficultyOptions() {
+        System.out.println();
         System.out.println("Choose difficulty:");
         System.out.println("1. EASY");
         System.out.println("2. MEDIUM");
         System.out.println("3. HARD");
+        System.out.println();
 
         int choice = getValidatedChoice(1, 3);
 
@@ -92,6 +94,7 @@ public class GameUI {
         System.out.println("Choose your character:");
         System.out.println("1. Warrior");
         System.out.println("2. Wizard");
+        System.out.println();
 
         int choice = getValidatedChoice(1, 2);
 
@@ -108,41 +111,52 @@ public class GameUI {
     public List<Item> displayItemOptions() {
         List<Item> selectedItems = new ArrayList<>();
 
-        System.out.println("Choose your starting items.");
-        System.out.println("You may pick multiple items.");
-        System.out.println("1. Potion");
-        System.out.println("2. Smoke Bomb");
-        System.out.println("3. Power Stone");
-        System.out.println("4. Finish selection");
+        System.out.println("Choose 2 starting items.");
+        System.out.println("Duplicates are allowed.");
+        System.out.println();
 
-        while (true) {
-            int choice = getValidatedChoice(1, 4);
+        while (selectedItems.size() < 2) {
+            System.out.println("Available items:");
+            System.out.println("1. Potion");
+            System.out.println("2. Smoke Bomb");
+            System.out.println("3. Power Stone");
+            System.out.println();
+
+            System.out.println("Pick item " + (selectedItems.size() + 1) + " of 2:");
+            int choice = getValidatedChoice(1, 3);
+
+            Item chosenItem = null;
 
             switch (choice) {
                 case 1:
-                    selectedItems.add(new Potion());
-                    System.out.println("Added: Potion");
+                    chosenItem = new Potion();
                     break;
                 case 2:
-                    selectedItems.add(new SmokeBomb());
-                    System.out.println("Added: Smoke Bomb");
+                    chosenItem = new SmokeBomb();
                     break;
                 case 3:
-                    selectedItems.add(new PowerStone((Combatant) null));
-                    System.out.println("Added: Power Stone");
+                    chosenItem = new PowerStone((Combatant) null);
                     break;
-                case 4:
-                    if (selectedItems.isEmpty()) {
-                        System.out.println("No items selected.");
-                    } else {
-                        System.out.println("Item selection complete.");
-                    }
-                    System.out.println();
-                    return selectedItems;
                 default:
                     throw new IllegalStateException("Unexpected item choice.");
             }
+
+            selectedItems.add(chosenItem);
+
+            System.out.println();
+            System.out.println("You selected: " + chosenItem.getName());
+            System.out.println("Current selected items:");
+            showItems(selectedItems);
+            System.out.println();
         }
+
+        System.out.println("Item selection complete.");
+        System.out.println("Your starting items are:");
+        System.out.println();
+        showItems(selectedItems);
+        System.out.println();
+
+        return selectedItems;
     }
 
     public void displayBattleStatus() {
@@ -178,8 +192,7 @@ public class GameUI {
             System.out.println("HP: " + combatant.getCurrentHP() + "/" + combatant.getMaxHP()
                     + " | ATK: " + combatant.getAttack()
                     + " | DEF: " + combatant.getDefense()
-                    + " | SPD: " + combatant.getSpeed()
-                    + " | Alive: " + combatant.isAlive());
+                    + " | SPD: " + combatant.getSpeed());
             System.out.println("--------------------------------------");
         }
 
@@ -199,6 +212,19 @@ public class GameUI {
         for (int i = 0; i < items.size(); i++) {
             System.out.println((i + 1) + ". " + items.get(i).getName());
         }
+    }
+
+    public void displayActionMenu() {
+        System.out.println("Choose an action:");
+        System.out.println("1. Basic Attack");
+        System.out.println("2. Defend");
+        System.out.println("3. Use Item");
+        System.out.println("4. Special Skill");
+        System.out.println();
+    }
+
+    public int getPlayerChoice() {
+        return getValidatedChoice(1, 4);
     }
 
 }

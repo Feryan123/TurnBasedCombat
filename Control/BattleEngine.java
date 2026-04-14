@@ -34,6 +34,13 @@ public class BattleEngine {
         }
     }
 
+    public void initialise(Player player, Level level) {
+        this.level = level;
+        this.combatants.clear();
+        this.combatants.add(player);
+        this.combatants.addAll(level.spawnInitialEnemies());
+    }
+
     public void processRound() {
         currentRound += 1;
         List<Combatant> turnOrder = turnOrderStrategy.getOrder(getAliveCombatants());
@@ -46,6 +53,7 @@ public class BattleEngine {
 
     public void processTurn(Combatant actor) {
         if (actor instanceof Player) {
+            ui.displayBattleStatus(getAliveCombatants());
             ui.displayActionMenu();
             int choice = ui.getPlayerChoice();
 
@@ -70,7 +78,7 @@ public class BattleEngine {
                 .orElse(null);
     }
 
-    private Combatant selectPlayerTargets() { // To be fixed: Need to return a List of Combatant, not a single Combatant. If only one target, return a list with that target as the only element.
+    public Combatant selectPlayerTarget() {
         // Placeholder for selecting a player target
         return combatants.stream().filter(c -> c instanceof Player && c.isAlive()).findFirst().orElse(null);
     }
@@ -90,4 +98,5 @@ public class BattleEngine {
                 .filter(c -> c.isAlive())
                 .collect(Collectors.toList());
     }
+
 }
