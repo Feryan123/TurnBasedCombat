@@ -26,10 +26,10 @@ public class SpecialSkill implements Action {
 
         if (user instanceof Warrior) {
             if (((Warrior) user).getSkillCooldown() != 0) return; // Check cooldown
-            ((Warrior) user).shieldBash(singleTarget); // Execute Warrior's skill
+            ((Warrior) user).useSpecialSkill(singleTarget); // Execute Warrior's skill
         } else if (user instanceof Wizard) {
             if (((Wizard) user).getSkillCooldown() != 0) return; // Check cooldown
-            ((Wizard) user).arcaneBlast(multiTargets); // Execute Wizard's skill
+            ((Wizard) user).useSpecialSkill(multiTargets); // Execute Wizard's skill
         }
     }
 }
