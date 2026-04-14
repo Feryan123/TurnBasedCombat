@@ -1,16 +1,27 @@
 package Combatants;
 
+import Actions.BasicAttack;
 import StatusEffects.StunEffect;
 
 public class Warrior extends Player{
-	public Warrior() {
-		super("Warrior", 260, 40, 20, 30);
+	public Warrior(String combatantName) {
+		int HP = 260;
+		int Atk = 40;
+		int Def = 20;
+		int Speed = 30;
+		super(combatantName, HP, Atk, Def, Speed);
 	}
 	
-    public void shieldBash(Combatant target){
-        int damage = Math.max(0, getAttack() - target.getDefense());
-        target.takeDamage(damage);
-        target.addEffect(new StunEffect(2));
-        resetSkillCooldown(3);
-    }
+	public void useSpecialSkill(Combatant target) {
+		new BasicAttack().execute(this, target);
+		target.addStatusEffect(new StunEffect(2));
+	}
+
+	@Override
+	public void execute(Combatant user, Combatant target) {
+		new BasicAttack().execute(user, target);
+		target.addStatusEffect(new StunEffect(2));
+		
+	}
+
 }
