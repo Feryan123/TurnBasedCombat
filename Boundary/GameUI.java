@@ -97,7 +97,7 @@ public class GameUI {
 
         switch (choice) {
             case 1:
-                return new Warrior();
+                return new Warrior("Warrior");
             case 2:
                 return new Wizard("Wizard");
             default:
@@ -200,5 +200,24 @@ public class GameUI {
             System.out.println((i + 1) + ". " + items.get(i).getName());
         }
     }
+
+	public void displayActionMenu() {
+		System.out.println();
+        System.out.println("======================================");
+        System.out.println("                Action                ");
+        System.out.println("======================================");
+        System.out.println("1. Attack");
+        System.out.println("2. Use Skill");
+        System.out.println("3. Use Item");
+        System.out.println("4. Defend");
+        System.out.println("======================================");
+        System.out.println();
+		
+	}
+
+	public int getPlayerChoice() {
+		 int choice = getValidatedChoice(1, 4);
+		 return choice;
+	}
 
 }
