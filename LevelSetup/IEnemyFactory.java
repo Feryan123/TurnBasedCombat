@@ -1,9 +1,10 @@
 package LevelSetup;
 
+import java.util.List;
 import Combatants.*;
 
 public interface IEnemyFactory {
-    public Goblin createGoblin();
-    public Wolf createWolf();
-
+    Goblin createGoblin();
+    Wolf createWolf();
+    List<Enemy> createEnemiesForLevel(Difficulty difficulty);
 }
