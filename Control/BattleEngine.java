@@ -70,14 +70,10 @@ public class BattleEngine {
                 action.execute(actor, selectedTarget);
             }
         } else if (actor instanceof Enemy) {
-            List<Combatant> possibleTargets = selectPlayerTargets();
-            if (!possibleTargets.isEmpty()) {
-                List<Combatant> selectedTarget = new ArrayList<>();
-                selectedTarget.add(possibleTargets.get(0));
+            actor.takeTurn(this);   // ✅ THIS IS THE KEY FIX
 
-                Action action = new BasicAttack();
-                action.execute(actor, selectedTarget);
-            }
+            ui.showMessage(actor.getName() + " attacked!");
+            ui.displayBattleStatus(getAliveCombatants());
         }
     }
 
