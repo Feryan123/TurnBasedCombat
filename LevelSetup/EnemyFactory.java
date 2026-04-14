@@ -3,9 +3,11 @@ package LevelSetup;
 import java.util.ArrayList;
 import java.util.List;
 import Combatants.*;
-import LevelSetup.EnemyFactory;
 
-
+/**
+ * EnemyFactory handles the concrete instantiation of enemies.
+ * Adheres to the Factory Method pattern to decouple creation from game logic.
+ */
 public class EnemyFactory implements IEnemyFactory{
 
     @Override
@@ -24,6 +26,7 @@ public class EnemyFactory implements IEnemyFactory{
      * Goblin and Wolf objects perfectly substitute their parent 
      * Enemy class without the Level needing to know the difference.
      */
+    @Override
     public List<Enemy> createEnemiesForLevel(Difficulty difficulty) {
     	/* Single Responsibility Principle (SRP). For createGoblin and createWolf calls within this function
     	* If we decide to change a Goblin's HP from 55 to 60:
