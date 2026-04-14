@@ -28,12 +28,21 @@ public class GameController {
 
     public void setupGame() {
         Player player = ui.displayCharacterOptions();
+        ui.showMessage("You have selected: " + player.getName());
+
         List<Item> items = ui.displayItemOptions();
-        player.setItems(items);
+        for (Item item : items) {
+            player.addItem(item);
+        }
+
+        ui.showMessage("Your starting items are:");
+        ui.showItems(player.getInventory().getItems());
+
         Difficulty difficulty = ui.displayDifficultyOptions();
         Level level = LevelFactory.createLevel(difficulty);
+
         battleEngine.initialise(player, level);
-    }
+    }   
 
     public void startBattle() {
         battleEngine.startBattle();
