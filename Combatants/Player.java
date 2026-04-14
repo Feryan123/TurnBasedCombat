@@ -1,41 +1,49 @@
 package Combatants;
 
-import Items.Inventory;
-import Items.Item;
+import java.util.ArrayList;
+import java.util.List;
+import Actions.*;
+import Items.*;
+import StatusEffects.*;
 
 public abstract class Player extends Combatant {
-    private int skillcd;
-    private Inventory inventory;
+	private Inventory inventory;
+	private List<Item> items = new ArrayList<>();
+	private int skillCD = 0;
+	
+	public Player(String combatantName, int HP, int Atk, int Def, int Speed) {
+		super(combatantName, HP, Atk, Def, Speed);
+	}
+	
+	public Action chooseAction(Action action) {
+		return action;
+	}
+	
+	public void useSpecialSkill(List<Enemy> targets) {
+		for (Combatant target: targets) {
+			new BasicAttack().execute(this, target);
+		}
+	}
+	
+	@Override
+	public void decrementCooldown() { 
+		if (skillCD > 0) { skillCD--; } 
+		for (StatusEffect effect : getEffects()) {
+	        if (effect.isExpired()) {
+	        	effect.onExpire(this);
+	        	removeExpiredEffect();
+	        }
+	    }
+	}
+	
+	public void resetSkillCooldown(int cooldown) { skillCD = 0; }
+	
+	public Inventory getInventory() { return inventory; }
+	public int getSkillCooldown() { return skillCD; }
 
-    public Player(String combatantName, int HP, int Atk, int Def, int Speed) {
-        super(combatantName, HP, Atk, Def, Speed);
-        this.skillcd = 0;
-        this.inventory = new Inventory();
-    }
+	public void removeItem(Item item) { items.remove(item); }
 
-    public void decrementCooldown() {
-        if (skillcd > 0) {
-            skillcd--;
-        }
-    }
+	public void setItems(List<Item> Items) { items = Items; }
 
-    public void addItem(Item item) {
-        inventory.addItem(item);
-    }
-
-    public void removeItem(Item item) {
-        inventory.removeItem(item);
-    }
-
-    public void resetSkillCooldown(int cooldown) {
-        this.skillcd = cooldown;
-    }
-
-    public int getSkillCooldown() {
-        return this.skillcd;
-    }
-
-    public Inventory getInventory() {
-        return inventory;
-    }
 }
+
