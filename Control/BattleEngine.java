@@ -172,40 +172,51 @@ public class BattleEngine {
 
     public void processTurn(Combatant actor) {
 
-        if (!actor.isAlive() || !actor.canAct()) {
+        if (!actor.isAlive()) {
             return;
         }
 
-        if (actor instanceof Player) {
-            Player player = (Player) actor;
+        if (actor.canAct()) {
 
-            if (queuedPlayerAction != null) {
-                queuedPlayerAction.execute(actor, queuedPlayerTargets);
+            if (actor instanceof Player) {
+                Player player = (Player) actor;
 
-                if (queuedPlayerAction instanceof BasicAttack && !queuedPlayerTargets.isEmpty()) {
-                    ui.showMessage(actor.getName() + " attacked " + queuedPlayerTargets.get(0).getName() + "!");
-                } else if (queuedPlayerAction instanceof ShieldBashAction && !queuedPlayerTargets.isEmpty()) {
-                    ui.showMessage(actor.getName() + " used Shield Bash on " + queuedPlayerTargets.get(0).getName() + "!");
-                    player.resetSkillCooldown(3);
-                } else if (queuedPlayerAction instanceof ArcaneBlastAction) {
-                    ui.showMessage(actor.getName() + " used Arcane Blast!");
-                    player.resetSkillCooldown(3);
+                if (queuedPlayerAction != null) {
+                    queuedPlayerAction.execute(actor, queuedPlayerTargets);
+
+                    if (queuedPlayerAction instanceof BasicAttack && !queuedPlayerTargets.isEmpty()) {
+                        ui.showMessage(actor.getName() + " attacked " + queuedPlayerTargets.get(0).getName() + "!");
+                    } 
+                    else if (queuedPlayerAction instanceof ShieldBashAction && !queuedPlayerTargets.isEmpty()) {
+                        ui.showMessage(actor.getName() + " used Shield Bash on " + queuedPlayerTargets.get(0).getName() + "!");
+                        player.resetSkillCooldown(3);
+                    } 
+                    else if (queuedPlayerAction instanceof ArcaneBlastAction) {
+                        ui.showMessage(actor.getName() + " used Arcane Blast!");
+                        player.resetSkillCooldown(3);
+                    }
+                }
+
+            } else if (actor instanceof Enemy) {
+                List<Combatant> targets = selectPlayerTargets();
+                if (!targets.isEmpty()) {
+                    Combatant chosenTarget = targets.get(0);
+
+                    List<Combatant> selectedTarget = new ArrayList<>();
+                    selectedTarget.add(chosenTarget);
+
+                    Action action = new BasicAttack();
+                    action.execute(actor, selectedTarget);
+
+                    ui.showMessage(actor.getName() + " attacked " + chosenTarget.getName() + "!");
                 }
             }
-        } else if (actor instanceof Enemy) {
-            List<Combatant> targets = selectPlayerTargets();
-            if (!targets.isEmpty()) {
-                Combatant chosenTarget = targets.get(0);
 
-                List<Combatant> selectedTarget = new ArrayList<>();
-                selectedTarget.add(chosenTarget);
-
-                Action action = new BasicAttack();
-                action.execute(actor, selectedTarget);
-
-                ui.showMessage(actor.getName() + " attacked " + chosenTarget.getName() + "!");
-            }
+        } else {
+            ui.showMessage(actor.getName() + " is stunned and cannot act!");
         }
+
+        // ALWAYS RUN THIS
         actor.endTurnStatusEffect();
         spawnBackupIfNeeded();
     }
