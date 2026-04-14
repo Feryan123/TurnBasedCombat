@@ -8,6 +8,7 @@ public class SmokeBomb implements Item {
     @Override
     public void use(Player user){
         user.addStatusEffect(new SmokeBombEffect());
+        
     }
     @Override
     public String getName() {

@@ -9,6 +9,7 @@ public class Potion implements Item {
     @Override
     public void use(Player user){
         user.heal(healAmount);
+        System.out.println(user.getName() + " uses a Potion and recovers " + healAmount + " HP!");
     }
     @Override
     public String getName() {

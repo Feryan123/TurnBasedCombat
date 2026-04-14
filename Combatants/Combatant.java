@@ -72,7 +72,6 @@ public abstract class Combatant{
 	// Method - Combat Actions
 	public void takeDamage(int amount) {
 		if (damageImmune) {
-			System.out.println(name + " is immune to damage!");
 			return;
 		}
 

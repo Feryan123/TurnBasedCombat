@@ -11,7 +11,8 @@ public class SmokeBombEffect extends StatusEffect {
     // Methods
     @Override
     public void onApply(Combatant target){
-        target.setIsDamageImmune(true); // Set if user is damage immune --> TBA in Combatant class
+        target.setIsDamageImmune(true);
+        System.out.println(target.getName() + " is immune to damage this turn!");
     }
     @Override
     public void onExpire(Combatant target){

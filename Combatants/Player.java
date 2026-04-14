@@ -15,15 +15,16 @@ public abstract class Player extends Combatant {
 
     // Constructor
     public Player(String combatantName, int HP, int Atk, int Def, int Speed, Action specialSkill) {
-        super(combatantName, HP, Atk, Def, Speed);
-        this.specialSkillCooldown = 0;
-        this.inventory = new Inventory();
-    }
+		super(combatantName, HP, Atk, Def, Speed);
+		this.specialSkillCooldown = 0;
+		this.specialSkill = specialSkill;
+		this.inventory = new Inventory();
+	}
 
     // Getter
     public int getSkillCooldown() {return this.specialSkillCooldown;}
     public Inventory getInventory() {return inventory;}
-    public Action getSpecialSkill(Combatant target) {return this.specialSkill;}
+    public Action getSpecialSkill() {return this.specialSkill;}
 
     // Increase/Decrease Stats
 	public void increaseDefense(int amount) {

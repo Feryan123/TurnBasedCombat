@@ -223,17 +223,37 @@ public class GameUI {
         return targets.get(choice - 1);
     }
 
-    public void displayActionMenu() {
+    public void displayActionMenu(Player player) {
         System.out.println("Choose an action:");
         System.out.println("1. Basic Attack");
         System.out.println("2. Defend");
         System.out.println("3. Use Item");
-        System.out.println("4. Special Skill");
+        
+        if (player.getSkillCooldown() > 0) {
+            System.out.println("4. Special Skill (Cooldown: " + player.getSkillCooldown() + " turn(s) left)");
+        } else {
+            System.out.println("4. Special Skill");
+        }
+
         System.out.println();
     }
 
     public int getPlayerChoice() {
         return getValidatedChoice(1, 4);
+    }
+
+    public void displayInventoryOptions(List<Item> items) {
+        System.out.println();
+        System.out.println("Choose an item to use:");
+        for (int i = 0; i < items.size(); i++) {
+            System.out.println((i + 1) + ". " + items.get(i).getName());
+        }
+        System.out.println((items.size() + 1) + ". Back");
+        System.out.println();
+    }
+
+    public int getInventoryChoice(int itemCount) {
+        return getValidatedChoice(1, itemCount + 1);
     }
 
 }

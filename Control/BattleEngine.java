@@ -7,6 +7,7 @@ import LevelSetup.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import Boundary.GameUI;
+import Items.Item;
 import java.util.ArrayList;
 
 public class BattleEngine {
@@ -54,10 +55,11 @@ public class BattleEngine {
 
         for (Combatant combatant : combatants) {
             if (combatant instanceof Player && combatant.isAlive()) {
+                Player player = (Player) combatant;
                 boolean validChoice = false;
 
                 while (!validChoice) {
-                    ui.displayActionMenu();
+                    ui.displayActionMenu(player);
                     int choice = ui.getPlayerChoice();
 
                     if (choice == 1) {
@@ -69,19 +71,65 @@ public class BattleEngine {
                             queuedPlayerAction = new BasicAttack();
                             validChoice = true;
                         }
+
                     } else if (choice == 2) {
-                        // Apply defend immediately
                         Action action = new DefendAction();
-                        action.execute(combatant, new ArrayList<>());
-
-                        ui.showMessage(combatant.getName() + " is defending! (+10 DEF)");
-
-                        // Do NOT queue anything
+                        action.execute(player, new ArrayList<>());
+                        ui.showMessage(player.getName() + " is defending! (+10 DEF)");
                         queuedPlayerAction = null;
-
                         validChoice = true;
-                    } else {
-                        ui.showMessage("Option not implemented yet. Choose again.");
+
+                    } else if (choice == 3) {
+                        List<Item> items = player.getInventory().getItems();
+
+                        if (items.isEmpty()) {
+                            ui.showMessage("You have no items. Choose another action.");
+                            System.out.println();
+                            continue;
+                        }
+
+                        boolean itemChosen = false;
+                        while (!itemChosen) {
+                            ui.displayInventoryOptions(items);
+                            int itemChoice = ui.getInventoryChoice(items.size());
+
+                            if (itemChoice == items.size() + 1) {
+                                System.out.println();
+                                break; // Back
+                            }
+
+                            Item selectedItem = items.get(itemChoice - 1);
+                            queuedPlayerAction = new UseItemAction(selectedItem);
+                            queuedPlayerTargets.clear();
+                            ui.showMessage(player.getName() + " selected " + selectedItem.getName() + ".");
+                            itemChosen = true;
+                            validChoice = true;
+                        }
+
+                    } else if (choice == 4) {
+                        if (player.getSkillCooldown() > 0) {
+                            ui.showMessage("Special Skill is on cooldown. Choose another action.");
+                            System.out.println(); 
+                            continue;
+                        }
+
+                        Action specialSkill = player.getSpecialSkill();
+
+                        if (specialSkill instanceof ArcaneBlastAction) {
+                            queuedPlayerTargets = selectEnemyTargets();
+                            queuedPlayerAction = specialSkill;
+                            validChoice = true;
+                        } else {
+                            List<Combatant> possibleTargets = selectEnemyTargets();
+                            if (!possibleTargets.isEmpty()) {
+                                ui.displayTargetOptions(possibleTargets);
+                                Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
+                                queuedPlayerTargets.clear();
+                                queuedPlayerTargets.add(chosenTarget);
+                                queuedPlayerAction = specialSkill;
+                                validChoice = true;
+                            }
+                        }
                     }
                 }
 
@@ -105,12 +153,20 @@ public class BattleEngine {
         }
 
         if (actor instanceof Player) {
+            Player player = (Player) actor;
+
             if (queuedPlayerAction != null) {
                 queuedPlayerAction.execute(actor, queuedPlayerTargets);
 
                 if (queuedPlayerAction instanceof BasicAttack && !queuedPlayerTargets.isEmpty()) {
                     ui.showMessage(actor.getName() + " attacked " + queuedPlayerTargets.get(0).getName() + "!");
                 }
+                else if (queuedPlayerAction instanceof SpecialSkillAction) {
+                    ui.showMessage(actor.getName() + " used a special skill!");
+                    player.resetSkillCooldown(3);
+                }
+
+                player.decrementCooldown();
             }
         } else if (actor instanceof Enemy) {
             List<Combatant> targets = selectPlayerTargets();
