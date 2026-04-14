@@ -23,11 +23,11 @@ public class PowerStone implements Item {
     public void use(Combatant user){
         if (user instanceof Warrior){
             int cooldown = ((Warrior) user).getSkillCooldown();
-            ((Warrior) user).shieldBash(singleTarget);
+            ((Warrior) user).useSpecialSkill(singleTarget);
             ((Warrior) user).resetSkillCooldown(cooldown);
         } else if (user instanceof Wizard) {
             int cooldown = ((Wizard) user).getSkillCooldown();
-            ((Wizard) user).arcaneBlast(multiTargets);
+            ((Wizard) user).useSpecialSkill(multiTargets);
             ((Wizard) user).resetSkillCooldown(cooldown);
         }
     }
