@@ -1,16 +1,17 @@
 package Items;
 
-import Combatants.*;
+import java.util.List;
+import Combatants.Combatant;
+import Combatants.Player;
+import Actions.Action;
 
 public class PowerStone implements Item {
-    // Methods
     @Override
-    public void use(Player user){
-        int cooldown = user.getSkillCooldown();
-        user.resetSkillCooldown(0);
-        user.useSpecialSkill();
-        user.resetSkillCooldown(cooldown);
+    public void use(Player user, List<Combatant> targets) {
+        Action specialSkill = user.getSpecialSkill();
+        specialSkill.execute(user, targets);
     }
+
     @Override
     public String getName() {
         return "Power Stone";

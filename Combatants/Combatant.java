@@ -49,43 +49,67 @@ public abstract class Combatant{
 	// Methods - Effects
 	public void addStatusEffect(StatusEffect effect) {
 		effects.add(effect);
+		effect.onApply(this);
 	}
-	public void removeExpiredEffect() {
-		effects.removeIf(effect -> effect.isExpired());
-	}
-	public void applyStatusEffect() {
-		for (StatusEffect effect : effects) {
-	        effect.onApply(this);
-	    }
-	}
+
 	public void endTurnStatusEffect() {
-		for (StatusEffect effect : effects) {
-	        effect.onEndTurn();
-	    }
+		for (int i = 0; i < effects.size(); i++) {
+			StatusEffect effect = effects.get(i);
+			effect.onEndTurn();
+
+			if (effect.isExpired()) {
+				effect.onExpire(this);
+				effects.remove(i);
+				i--;
+			}
+		}
 	}
-	public void removeEffect(StatusEffect effect) {
-		effects.remove(effect);
+
+	public void removeExpiredEffects() {
+		effects.removeIf(effect -> effect.isExpired());
 	}
 
 	// Method - Combat Actions
 	public void takeDamage(int amount) {
-		if (damageImmune) { return; }
-		currentHP -= Math.max(0, amount - defense);
-		if (currentHP <= 0) { currentHP = 0; }
+		if (damageImmune) {
+			return;
+		}
+
+		int damage = Math.max(0, amount - defense);
+		currentHP -= damage;
+
+		if (currentHP < 0) {
+			currentHP = 0;
+		}
 	}
+
 	public void takeTurn(BattleEngine engine) {
 		engine.processRound();
 		if (!canAct()) return; 
 		engine.processTurn(this);
 	}
+
 	public boolean isAlive() { return currentHP > 0; }
+	
 	public boolean canAct() { 
-		if (isAlive()) {
-			for (StatusEffect effect : effects) {
-		        if (effect.preventsAction()) { return false; }
-		    }
-			return true;
+		if (!isAlive()) {
+			return false;
 		}
-		return false;
+
+		for (StatusEffect effect : effects) {
+			if (effect.preventsAction()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public void increaseDefense(int amount) {
+		this.defense += amount;
+	}
+
+	public void decreaseDefense(int amount) {
+		this.defense -= amount;
 	}
 }

@@ -3,6 +3,7 @@ package Combatants;
 import Items.Inventory;
 import Items.Item;
 import Actions.Action;
+import Actions.BasicAttack;
 import java.util.List;
 import Control.BattleEngine;
 
@@ -14,15 +15,16 @@ public abstract class Player extends Combatant {
 
     // Constructor
     public Player(String combatantName, int HP, int Atk, int Def, int Speed, Action specialSkill) {
-        super(combatantName, HP, Atk, Def, Speed);
-        this.specialSkillCooldown = 0;
-        this.inventory = new Inventory();
-    }
+		super(combatantName, HP, Atk, Def, Speed);
+		this.specialSkillCooldown = 0;
+		this.specialSkill = specialSkill;
+		this.inventory = new Inventory();
+	}
 
     // Getter
     public int getSkillCooldown() {return this.specialSkillCooldown;}
     public Inventory getInventory() {return inventory;}
-    public Action getSpecialSkill(Combatant target) {return this.specialSkill;}
+    public Action getSpecialSkill() {return this.specialSkill;}
 
     // Increase/Decrease Stats
 	public void increaseDefense(int amount) {
@@ -30,17 +32,21 @@ public abstract class Player extends Combatant {
 	public void decreaseDefense(int amount) {
 		this.setDefense(this.getDefense() - amount);
 	}
+
 	public void increaseAttack(int amount) {
 		this.setAttack(this.getAttack() + amount);
 	}
+
 	public void heal(int amount) {
 		this.setCurrentHP(this.getCurrentHP() + amount);
 	}
+
     public void decrementCooldown() {
         if (specialSkillCooldown > 0) {
             specialSkillCooldown--;
         }
     }
+
     public void resetSkillCooldown(int cooldown) {
         this.specialSkillCooldown = cooldown;
     }
@@ -54,11 +60,10 @@ public abstract class Player extends Combatant {
     }    
 
     // Methods - Special Skill
-    public void useSpecialSkill() {
-        if(specialSkillCooldown > 0) return; 
-        List<Combatant> targets = BattleEngine.selectEnemyTargets(); // To be fixed: Need to return a List of Combatant, not a single Combatant. If only one target, return a list with that target as the only element.
-        specialSkill.execute(this, targets);
-        resetSkillCooldown(3);
-    }
+    public void useSpecialSkill(List<Combatant> targets, BattleEngine engine) {
+		for (Combatant target : targets) {
+			new BasicAttack().execute(this, java.util.Arrays.asList(target));
+		}
+	}
 
 }

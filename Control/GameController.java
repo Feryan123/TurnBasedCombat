@@ -14,7 +14,6 @@ public class GameController {
 
     private GameUI ui;
     private BattleEngine battleEngine;
-
     public GameController() {
         ui = new GameUI();
         battleEngine = new BattleEngine(new java.util.ArrayList<>(), new SpeedBasedTurnOrder(new java.util.ArrayList<>()));
@@ -32,7 +31,9 @@ public class GameController {
         ui.showMessage("");
 
         List<Item> items = ui.displayItemOptions();
-        player.getInventory(items);
+        for (Item item : items) {
+            player.addItem(item);
+        }
         Difficulty difficulty = ui.displayDifficultyOptions();
         Level level = new Level(difficulty, new EnemyFactory());
 

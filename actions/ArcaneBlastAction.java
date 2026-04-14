@@ -9,8 +9,7 @@ public class ArcaneBlastAction extends SpecialSkillAction {
         if(!user.canAct()) return; // Check if user can act
         int kills = 0;
         for (Combatant target : targets) {
-            int damage = Math.max(0, user.getAttack() * 2 - target.getDefense());
-            target.takeDamage(damage);
+            target.takeDamage(user.getAttack());
             if (!target.isAlive()) {
                 kills++;
             }

@@ -24,6 +24,7 @@ public class GameUI {
     }
 
     public void displayWelcomeScreen() {
+        System.out.println();
         System.out.println("======================================");
         System.out.println("       TURN-BASED COMBAT GAME         ");
         System.out.println("======================================");
@@ -69,7 +70,6 @@ public class GameUI {
     }
 
     public Difficulty displayDifficultyOptions() {
-        System.out.println();
         System.out.println("Choose difficulty:");
         System.out.println("1. EASY");
         System.out.println("2. MEDIUM");
@@ -102,7 +102,7 @@ public class GameUI {
             case 1:
                 return new Warrior();
             case 2:
-                return new Wizard("Wizard");
+                return new Wizard();
             default:
                 throw new IllegalStateException("Unexpected character choice.");
         }
@@ -135,7 +135,7 @@ public class GameUI {
                     chosenItem = new SmokeBomb();
                     break;
                 case 3:
-                    chosenItem = new PowerStone((Combatant) null);
+                    chosenItem = new PowerStone();
                     break;
                 default:
                     throw new IllegalStateException("Unexpected item choice.");
@@ -159,15 +159,8 @@ public class GameUI {
         return selectedItems;
     }
 
-    public void displayBattleStatus() {
-        System.out.println("======================================");
-        System.out.println("             BATTLE STATUS            ");
-        System.out.println("======================================");
-        System.out.println("Battle status display not wired yet.");
-        System.out.println();
-    }
-
     public void displayBattleStatus(List<Combatant> combatants) {
+        System.out.println();
         System.out.println("======================================");
         System.out.println("             BATTLE STATUS            ");
         System.out.println("======================================");
@@ -214,17 +207,53 @@ public class GameUI {
         }
     }
 
-    public void displayActionMenu() {
+    public void displayTargetOptions(List<Combatant> targets) {
+        System.out.println();
+        System.out.println("Choose a target:");
+        for (int i = 0; i < targets.size(); i++) {
+            Combatant target = targets.get(i);
+            System.out.println((i + 1) + ". " + target.getName()
+                    + " (HP: " + target.getCurrentHP() + "/" + target.getMaxHP() + ")");
+        }
+        System.out.println();
+    }
+
+    public Combatant getTargetChoice(List<Combatant> targets) {
+        int choice = getValidatedChoice(1, targets.size());
+        return targets.get(choice - 1);
+    }
+
+    public void displayActionMenu(Player player) {
         System.out.println("Choose an action:");
         System.out.println("1. Basic Attack");
         System.out.println("2. Defend");
         System.out.println("3. Use Item");
-        System.out.println("4. Special Skill");
+        
+        if (player.getSkillCooldown() > 0) {
+            System.out.println("4. Special Skill (Cooldown: " + player.getSkillCooldown() + " turn(s) left)");
+        } else {
+            System.out.println("4. Special Skill");
+        }
+
         System.out.println();
     }
 
     public int getPlayerChoice() {
         return getValidatedChoice(1, 4);
+    }
+
+    public void displayInventoryOptions(List<Item> items) {
+        System.out.println();
+        System.out.println("Choose an item to use:");
+        for (int i = 0; i < items.size(); i++) {
+            System.out.println((i + 1) + ". " + items.get(i).getName());
+        }
+        System.out.println((items.size() + 1) + ". Back");
+        System.out.println();
+    }
+
+    public int getInventoryChoice(int itemCount) {
+        return getValidatedChoice(1, itemCount + 1);
     }
 
 }
