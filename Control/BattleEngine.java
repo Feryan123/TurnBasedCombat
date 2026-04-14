@@ -46,6 +46,7 @@ public class BattleEngine {
 
     public void processTurn(Combatant actor) {
         if (actor instanceof Player) {
+            ui.displayBattleStatus(getAliveCombatants());
             ui.displayActionMenu();
             int choice = ui.getPlayerChoice();
 
