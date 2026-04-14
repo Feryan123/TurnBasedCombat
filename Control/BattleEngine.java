@@ -71,7 +71,7 @@ public class BattleEngine {
                 .orElse(null);
     }
 
-    private Combatant selectPlayerTarget() {
+    public Combatant selectPlayerTarget() {
         // Placeholder for selecting a player target
         return combatants.stream().filter(c -> c instanceof Player && c.isAlive()).findFirst().orElse(null);
     }

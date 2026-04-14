@@ -209,4 +209,16 @@ public class GameUI {
         }
     }
 
+    public void displayActionMenu() {
+        System.out.println("Choose an action:");
+        System.out.println("1. Basic Attack");
+        System.out.println("2. Defend");
+        System.out.println("3. Use Item");
+        System.out.println("4. Special Skill");
+    }
+
+    public int getPlayerChoice() {
+        return getValidatedChoice(1, 4);
+    }
+
 }
