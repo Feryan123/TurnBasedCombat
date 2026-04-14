@@ -29,6 +29,7 @@ public class GameController {
     public void setupGame() {
         Player player = ui.displayCharacterOptions();
         ui.showMessage("You have selected: " + player.getName());
+        ui.showMessage("");
 
         List<Item> items = ui.displayItemOptions();
         for (Item item : items) {
@@ -39,7 +40,7 @@ public class GameController {
         ui.showItems(player.getInventory().getItems());
 
         Difficulty difficulty = ui.displayDifficultyOptions();
-        Level level = LevelFactory.createLevel(difficulty);
+        Level level = new Level(difficulty, new EnemyFactory());
 
         battleEngine.initialise(player, level);
     }   

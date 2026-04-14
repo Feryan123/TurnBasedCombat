@@ -69,10 +69,12 @@ public class GameUI {
     }
 
     public Difficulty displayDifficultyOptions() {
+        System.out.println();
         System.out.println("Choose difficulty:");
         System.out.println("1. EASY");
         System.out.println("2. MEDIUM");
         System.out.println("3. HARD");
+        System.out.println();
 
         int choice = getValidatedChoice(1, 3);
 
@@ -92,6 +94,7 @@ public class GameUI {
         System.out.println("Choose your character:");
         System.out.println("1. Warrior");
         System.out.println("2. Wizard");
+        System.out.println();
 
         int choice = getValidatedChoice(1, 2);
 
@@ -117,6 +120,7 @@ public class GameUI {
             System.out.println("1. Potion");
             System.out.println("2. Smoke Bomb");
             System.out.println("3. Power Stone");
+            System.out.println();
 
             System.out.println("Pick item " + (selectedItems.size() + 1) + " of 2:");
             int choice = getValidatedChoice(1, 3);
@@ -139,6 +143,7 @@ public class GameUI {
 
             selectedItems.add(chosenItem);
 
+            System.out.println();
             System.out.println("You selected: " + chosenItem.getName());
             System.out.println("Current selected items:");
             showItems(selectedItems);
@@ -147,6 +152,7 @@ public class GameUI {
 
         System.out.println("Item selection complete.");
         System.out.println("Your starting items are:");
+        System.out.println();
         showItems(selectedItems);
         System.out.println();
 
@@ -186,8 +192,7 @@ public class GameUI {
             System.out.println("HP: " + combatant.getCurrentHP() + "/" + combatant.getMaxHP()
                     + " | ATK: " + combatant.getAttack()
                     + " | DEF: " + combatant.getDefense()
-                    + " | SPD: " + combatant.getSpeed()
-                    + " | Alive: " + combatant.isAlive());
+                    + " | SPD: " + combatant.getSpeed());
             System.out.println("--------------------------------------");
         }
 
@@ -215,6 +220,7 @@ public class GameUI {
         System.out.println("2. Defend");
         System.out.println("3. Use Item");
         System.out.println("4. Special Skill");
+        System.out.println();
     }
 
     public int getPlayerChoice() {

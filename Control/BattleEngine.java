@@ -34,6 +34,13 @@ public class BattleEngine {
         }
     }
 
+    public void initialise(Player player, Level level) {
+        this.level = level;
+        this.combatants.clear();
+        this.combatants.add(player);
+        this.combatants.addAll(level.spawnInitialEnemies());
+    }
+
     public void processRound() {
         currentRound += 1;
         List<Combatant> turnOrder = turnOrderStrategy.getOrder(getAliveCombatants());
@@ -91,4 +98,5 @@ public class BattleEngine {
                 .filter(c -> c.isAlive())
                 .collect(Collectors.toList());
     }
+
 }
