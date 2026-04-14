@@ -9,9 +9,9 @@ public class Level {
     private boolean backupSpawned;
     private List<Enemy> initialEnemies;
     private List<Enemy> backupEnemies;
-    private EnemyFactory factory;
+    private IEnemyFactory factory;
 
-    public Level(Difficulty difficulty) {
+    public Level(Difficulty difficulty, IEnemyFactory factory) {
         this.difficulty = difficulty;
         this.backupSpawned = false;
         this.factory = new EnemyFactory();
