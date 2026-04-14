@@ -1,8 +1,8 @@
 package Items;
 
-import Combatants.*;
+import Combatants.Player;
 
 public interface Item {
-    void use(Combatant user);
+    void use(Player user);
     String getName();
 }

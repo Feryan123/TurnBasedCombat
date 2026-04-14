@@ -3,66 +3,50 @@ package Combatants;
 import java.util.ArrayList;
 import java.util.List;
 import StatusEffects.StatusEffect;
-import Items.Inventory;
 import Control.BattleEngine;
 
 public abstract class Combatant{
+	// Attributes
 	private String name;
 	private int maxHP;
-	private int curHP;
-	private int atk;
-	private int def;
+	private int currentHP;
+	private int attack;
+	private int defense;
 	private int speed;
 	private boolean damageImmune = false;
 	private List<StatusEffect> effects = new ArrayList<>();
 	
+	// Constructor
 	public Combatant(String combatantName, int HP, int Atk, int Def, int Speed) {
 		this.name = combatantName;
 		this.maxHP = HP;
-		this.curHP = maxHP;
-		this.atk = Atk;
-		this.def = Def;
+		this.currentHP = maxHP;
+		this.attack = Atk;
+		this.defense = Def;
 		this.speed = Speed;
 	}
 
-	public String getName() {
-		return this.name;
-	}
+	// Getters
+	public String getName() {return this.name;}
+	public int getCurrentHP() {return this.currentHP;}
+	public int getMaxHP() {return this.maxHP;}
+	public int getSpeed(){return this.speed;}
+	public int getAttack(){return this.attack;}
+	public int getDefense(){return this.defense;}
 
-	public int getCurrentHP() {
-		return this.curHP;
-	}
-
-	public int getMaxHP() {
-		return this.maxHP;
-	}
-
-	public void takeDamage(int amount) {
-		if (damageImmune) { return; }
-		curHP -= Math.max(0, amount - def);
-		if (curHP <= 0) { curHP = 0; }
-	}
-	public void takeTurn(BattleEngine engine) {
-		engine.processRound();
-		if (!canAct()) return; 
-		engine.processTurn(this);
-	}
-	public void heal(int amount) {
-		curHP += amount;
-		if (curHP > maxHP) {
-			curHP = maxHP;
+	// Setters
+	public void setIsDamageImmune(boolean isImmune) {damageImmune = isImmune;}
+	public void setCurrentHP(int HP) {
+		this.currentHP = Math.min(HP, this.maxHP);
+		if (this.currentHP < 0) {
+			this.currentHP = 0;
 		}
 	}
-	public boolean isAlive() { return curHP > 0; }
-	public boolean canAct() { 
-		if (isAlive()) {
-			for (StatusEffect effect : effects) {
-		        if (effect.preventsAction()) { return false; }
-		    }
-			return true;
-		}
-		return false;
-	}
+	public void setAttack(int attack) {this.attack = attack;}
+	public void setDefense(int defense) {this.defense = defense;}
+
+
+	// Methods - Effects
 	public void addStatusEffect(StatusEffect effect) {
 		effects.add(effect);
 	}
@@ -74,25 +58,34 @@ public abstract class Combatant{
 	        effect.onApply(this);
 	    }
 	}
-	public void setIsDamageImmune(boolean isImmune) {
-		damageImmune = isImmune;
-	}
-	public void increaseDefense(int amount) {
-		this.def += amount;
-	}
-	public void decreaseDefense(int amount) {
-		this.def -= amount;
-	}
-	public void increaseAttack(int amount) {
-		this.atk += amount;
-	}
-	public int getSpeed(){return this.speed;}
-	public int getAttack(){return this.atk;}
-	public int getDefense(){return this.def;}
-	public void addEffect(StatusEffect effect) {
-		effects.add(effect);
+	public void endTurnStatusEffect() {
+		for (StatusEffect effect : effects) {
+	        effect.onEndTurn();
+	    }
 	}
 	public void removeEffect(StatusEffect effect) {
 		effects.remove(effect);
+	}
+
+	// Method - Combat Actions
+	public void takeDamage(int amount) {
+		if (damageImmune) { return; }
+		currentHP -= Math.max(0, amount - defense);
+		if (currentHP <= 0) { currentHP = 0; }
+	}
+	public void takeTurn(BattleEngine engine) {
+		engine.processRound();
+		if (!canAct()) return; 
+		engine.processTurn(this);
+	}
+	public boolean isAlive() { return currentHP > 0; }
+	public boolean canAct() { 
+		if (isAlive()) {
+			for (StatusEffect effect : effects) {
+		        if (effect.preventsAction()) { return false; }
+		    }
+			return true;
+		}
+		return false;
 	}
 }

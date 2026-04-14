@@ -3,7 +3,7 @@ package StatusEffects;
 import Combatants.*;
 
 public class ArcaneBuffEffect extends StatusEffect {
-    private int atkIncrease = 10;
+    private int attackBoost = 10;
     private int kills;
 
     // Constructor
@@ -15,7 +15,7 @@ public class ArcaneBuffEffect extends StatusEffect {
     // Methods
     @Override
     public void onApply(Combatant target){
-        target.increaseAttack(atkIncrease*kills);
+        ((Player)target).increaseAttack(attackBoost*kills);
     }
     @Override
     public void onExpire(Combatant target){

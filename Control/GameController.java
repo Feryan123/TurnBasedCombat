@@ -29,7 +29,7 @@ public class GameController {
     public void setupGame() {
         Player player = ui.displayCharacterOptions();
         List<Item> items = ui.displayItemOptions();
-        player.setItems(items);
+        player.getInventory(items);
         Difficulty difficulty = ui.displayDifficultyOptions();
         Level level = LevelFactory.createLevel(difficulty);
         battleEngine.initialise(player, level);
