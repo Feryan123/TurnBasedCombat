@@ -102,7 +102,7 @@ public class GameUI {
             case 1:
                 return new Warrior();
             case 2:
-                return new Wizard("Wizard");
+                return new Wizard();
             default:
                 throw new IllegalStateException("Unexpected character choice.");
         }
@@ -135,7 +135,7 @@ public class GameUI {
                     chosenItem = new SmokeBomb();
                     break;
                 case 3:
-                    chosenItem = new PowerStone((Combatant) null);
+                    chosenItem = new PowerStone();
                     break;
                 default:
                     throw new IllegalStateException("Unexpected item choice.");
