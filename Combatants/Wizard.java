@@ -1,22 +1,32 @@
 package Combatants;
 
 import java.util.List;
-import Actions.*;
-import StatusEffects.*;
+
+import Actions.BasicAttack;
 
 public class Wizard extends Player {
-	
+
 	public Wizard(String combatantName) {
-		super("Wizard", 200, 50, 10, 20);
+		int HP = 200;
+		int Atk = 50;
+		int Def = 10;
+		int Speed = 20;
+		super(combatantName, HP, Atk, Def, Speed);
 	}
 	
-	public void arcaneBlast(List<Enemy> targets){
-        int kills = 0;
+	@Override
+	public void useSpecialSkill(List<Enemy> targets) {
 		for (Combatant target: targets) {
 			new BasicAttack().execute(this, target);
-			if (!target.isAlive()) { kills++; }
+			if (!target.isAlive()) { increaseAttack(10); }
 		}
-		this.addEffect(new ArcaneBuffEffect(kills));
-        resetSkillCooldown(3);
-    }
+	}
+
+	@Override
+	public void execute(Combatant user, Combatant target) {
+		new BasicAttack().execute(user, target);
+		if (!target.isAlive()) { increaseAttack(10); }
+		
+	}
+
 }
