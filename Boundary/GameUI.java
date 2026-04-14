@@ -24,6 +24,7 @@ public class GameUI {
     }
 
     public void displayWelcomeScreen() {
+        System.out.println();
         System.out.println("======================================");
         System.out.println("       TURN-BASED COMBAT GAME         ");
         System.out.println("======================================");
@@ -158,15 +159,8 @@ public class GameUI {
         return selectedItems;
     }
 
-    public void displayBattleStatus() {
-        System.out.println("======================================");
-        System.out.println("             BATTLE STATUS            ");
-        System.out.println("======================================");
-        System.out.println("Battle status display not wired yet.");
-        System.out.println();
-    }
-
     public void displayBattleStatus(List<Combatant> combatants) {
+        System.out.println();
         System.out.println("======================================");
         System.out.println("             BATTLE STATUS            ");
         System.out.println("======================================");

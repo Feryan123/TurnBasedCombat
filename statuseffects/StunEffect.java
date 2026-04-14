@@ -15,7 +15,7 @@ public class StunEffect extends StatusEffect{
     }
     @Override
     public void onExpire(Combatant target) {
-        target.removeExpiredEffect();
+        target.removeExpiredEffects();
     }
     @Override
     public boolean preventsAction(){

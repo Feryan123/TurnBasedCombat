@@ -1,20 +1,27 @@
 package StatusEffects;
 
-import Combatants.*;
+import Combatants.Combatant;
 
 public class DefendEffect extends StatusEffect {
-    // Constructor
-    public DefendEffect(){
-        super("Defend Buff", 2);
+    private int defenseBoost;
+
+    public DefendEffect() {
+        super("Defend", 2);
+        this.defenseBoost = 10;
     }
 
-    // Methods
     @Override
-    public void onApply(Combatant target){
-        ((Player) target).increaseDefense(10);
+    public void onApply(Combatant target) {
+        target.increaseDefense(defenseBoost);
     }
+
     @Override
-    public void onExpire(Combatant target){
-        ((Player) target).decreaseDefense(10);
+    public void onExpire(Combatant target) {
+        target.decreaseDefense(defenseBoost);
+    }
+
+    @Override
+    public boolean preventsAction() {
+        return false;
     }
 }

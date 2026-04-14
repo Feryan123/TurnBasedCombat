@@ -15,6 +15,8 @@ public class BattleEngine {
     private Level level;
     private int currentRound;
     private GameUI ui;
+    private Action queuedPlayerAction;
+    private List<Combatant> queuedPlayerTargets;
 
     public BattleEngine(List<Combatant> combatants, TurnOrderStrategy turnOrderStrategy) {
         this.combatants = combatants;
@@ -43,8 +45,52 @@ public class BattleEngine {
     }
 
     public void processRound() {
-        currentRound += 1;
+        currentRound++;
+        ui.displayBattleStatus(getAliveCombatants());
+
+        // Queue player action first
+        queuedPlayerAction = null;
+        queuedPlayerTargets = new ArrayList<>();
+
+        for (Combatant combatant : combatants) {
+            if (combatant instanceof Player && combatant.isAlive()) {
+                boolean validChoice = false;
+
+                while (!validChoice) {
+                    ui.displayActionMenu();
+                    int choice = ui.getPlayerChoice();
+
+                    if (choice == 1) {
+                        List<Combatant> possibleTargets = selectEnemyTargets();
+                        if (!possibleTargets.isEmpty()) {
+                            ui.displayTargetOptions(possibleTargets);
+                            Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
+                            queuedPlayerTargets.add(chosenTarget);
+                            queuedPlayerAction = new BasicAttack();
+                            validChoice = true;
+                        }
+                    } else if (choice == 2) {
+                        // Apply defend immediately
+                        Action action = new DefendAction();
+                        action.execute(combatant, new ArrayList<>());
+
+                        ui.showMessage(combatant.getName() + " is defending! (+10 DEF)");
+
+                        // Do NOT queue anything
+                        queuedPlayerAction = null;
+
+                        validChoice = true;
+                    } else {
+                        ui.showMessage("Option not implemented yet. Choose again.");
+                    }
+                }
+
+                break;
+            }
+        }
+
         List<Combatant> turnOrder = turnOrderStrategy.getOrder(getAliveCombatants());
+
         for (Combatant actor : turnOrder) {
             if (actor.isAlive()) {
                 processTurn(actor);
@@ -53,28 +99,34 @@ public class BattleEngine {
     }
 
     public void processTurn(Combatant actor) {
-        if (actor instanceof Player) {
-            ui.displayBattleStatus(getAliveCombatants());
-            ui.displayActionMenu();
-            int choice = ui.getPlayerChoice();
 
-            List<Combatant> possibleTargets = selectEnemyTargets();
-            if (!possibleTargets.isEmpty()) {
-                ui.displayTargetOptions(possibleTargets);
-                Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
+        if (!actor.isAlive() || !actor.canAct()) {
+            return;
+        }
+
+        if (actor instanceof Player) {
+            if (queuedPlayerAction != null) {
+                queuedPlayerAction.execute(actor, queuedPlayerTargets);
+
+                if (queuedPlayerAction instanceof BasicAttack && !queuedPlayerTargets.isEmpty()) {
+                    ui.showMessage(actor.getName() + " attacked " + queuedPlayerTargets.get(0).getName() + "!");
+                }
+            }
+        } else if (actor instanceof Enemy) {
+            List<Combatant> targets = selectPlayerTargets();
+            if (!targets.isEmpty()) {
+                Combatant chosenTarget = targets.get(0);
 
                 List<Combatant> selectedTarget = new ArrayList<>();
                 selectedTarget.add(chosenTarget);
 
                 Action action = new BasicAttack();
                 action.execute(actor, selectedTarget);
-            }
-        } else if (actor instanceof Enemy) {
-            actor.takeTurn(this);   // ✅ THIS IS THE KEY FIX
 
-            ui.showMessage(actor.getName() + " attacked!");
-            ui.displayBattleStatus(getAliveCombatants());
+                ui.showMessage(actor.getName() + " attacked " + chosenTarget.getName() + "!");
+            }
         }
+        actor.endTurnStatusEffect();
     }
 
     public List<Combatant> selectEnemyTargets() {
