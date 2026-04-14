@@ -7,6 +7,7 @@ import LevelSetup.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import Boundary.GameUI;
+import java.util.ArrayList;
 
 public class BattleEngine {
     private List<Combatant> combatants;
@@ -57,30 +58,39 @@ public class BattleEngine {
             ui.displayActionMenu();
             int choice = ui.getPlayerChoice();
 
-            Combatant target = selectTarget();
-            if (target != null) {
+            List<Combatant> possibleTargets = selectEnemyTargets();
+            if (!possibleTargets.isEmpty()) {
+                ui.displayTargetOptions(possibleTargets);
+                Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
+
+                List<Combatant> selectedTarget = new ArrayList<>();
+                selectedTarget.add(chosenTarget);
+
                 Action action = new BasicAttack();
-                action.execute(actor, target);
+                action.execute(actor, selectedTarget);
             }
         } else if (actor instanceof Enemy) {
-            Combatant target = selectPlayerTarget();
-            if (target != null) {
+            List<Combatant> possibleTargets = selectPlayerTargets();
+            if (!possibleTargets.isEmpty()) {
+                List<Combatant> selectedTarget = new ArrayList<>();
+                selectedTarget.add(possibleTargets.get(0));
+
                 Action action = new BasicAttack();
-                action.execute(actor, target);
+                action.execute(actor, selectedTarget);
             }
         }
     }
 
-    public Combatant selectEnemyTargets() { // To be fixed: Need to return a List of Combatant, not a single Combatant. If only one target, return a list with that target as the only element.
+    public List<Combatant> selectEnemyTargets() {
         return combatants.stream()
                 .filter(c -> c instanceof Enemy && c.isAlive())
-                .findFirst()
-                .orElse(null);
+                .collect(Collectors.toList());
     }
 
-    public Combatant selectPlayerTarget() {
-        // Placeholder for selecting a player target
-        return combatants.stream().filter(c -> c instanceof Player && c.isAlive()).findFirst().orElse(null);
+    public List<Combatant> selectPlayerTargets() {
+        return combatants.stream()
+                .filter(c -> c instanceof Player && c.isAlive())
+                .collect(Collectors.toList());
     }
 
     public boolean checkLoseCondition() {

@@ -69,7 +69,6 @@ public class GameUI {
     }
 
     public Difficulty displayDifficultyOptions() {
-        System.out.println();
         System.out.println("Choose difficulty:");
         System.out.println("1. EASY");
         System.out.println("2. MEDIUM");
@@ -212,6 +211,22 @@ public class GameUI {
         for (int i = 0; i < items.size(); i++) {
             System.out.println((i + 1) + ". " + items.get(i).getName());
         }
+    }
+
+    public void displayTargetOptions(List<Combatant> targets) {
+        System.out.println();
+        System.out.println("Choose a target:");
+        for (int i = 0; i < targets.size(); i++) {
+            Combatant target = targets.get(i);
+            System.out.println((i + 1) + ". " + target.getName()
+                    + " (HP: " + target.getCurrentHP() + "/" + target.getMaxHP() + ")");
+        }
+        System.out.println();
+    }
+
+    public Combatant getTargetChoice(List<Combatant> targets) {
+        int choice = getValidatedChoice(1, targets.size());
+        return targets.get(choice - 1);
     }
 
     public void displayActionMenu() {
