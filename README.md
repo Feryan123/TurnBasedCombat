@@ -55,30 +55,46 @@ Level + IEnemyFactory → Handles enemy spawning logic
 
 ✅ OOP Concepts
 Encapsulation → Data hidden inside classes
+
 Inheritance → Shared behaviour via Combatant
+
 Polymorphism → Actions, items, and enemies interchangeable
+
 Abstraction → Interfaces and abstract classes
 
 ✅ SOLID Principles
 SRP → Each class has a single responsibility
+
 OCP → Extend via new classes (Actions, Effects, Items)
+
 LSP → Subclasses usable as parent types
+
 ISP → Small focused interfaces (Action, Item)
+
 DIP → Depends on abstractions (TurnOrderStrategy, IEnemyFactory)
 
 
 🚀 How to Run
+
 Clone the repo
+
 git clone https://github.com/your-repo-link
+
 Open in IntelliJ / VSCode
+
 Run: GameController.java
 
 
 👥 Team
+
 Gan Ching Heng
+
 Bu Ping Jin
+
 Gajulapalli Anish Reddy
+
 Feryan Krishany Jonandri
+
 Dhawan Khushi
 
 This project is based on the SC2002 group assignment specification.
