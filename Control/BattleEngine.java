@@ -172,10 +172,6 @@ public class BattleEngine {
 
     public void processTurn(Combatant actor) {
 
-        if (!actor.isAlive()) {
-            return;
-        }
-
         if (actor.canAct()) {
 
             if (actor instanceof Player) {
