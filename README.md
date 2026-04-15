@@ -54,6 +54,7 @@ Level + IEnemyFactory → Handles enemy spawning logic
 🧠 Design Principles Used
 
 ✅ OOP Concepts
+
 Encapsulation → Data hidden inside classes
 
 Inheritance → Shared behaviour via Combatant
@@ -63,6 +64,7 @@ Polymorphism → Actions, items, and enemies interchangeable
 Abstraction → Interfaces and abstract classes
 
 ✅ SOLID Principles
+
 SRP → Each class has a single responsibility
 
 OCP → Extend via new classes (Actions, Effects, Items)
