@@ -17,8 +17,6 @@ public class BattleEngine {
     private Level level;
     private int currentRound;
     private GameUI ui;
-    private Action queuedPlayerAction;
-    private List<Combatant> queuedPlayerTargets;
 
     public BattleEngine(List<Combatant> combatants, TurnOrderStrategy turnOrderStrategy) {
         this.combatants = combatants;
@@ -26,6 +24,10 @@ public class BattleEngine {
         this.level = null;
         this.currentRound = 0;
         this.ui = new GameUI();
+    }
+
+    public GameUI getUI() {
+        return ui;
     }
 
     public void startBattle() {
@@ -50,171 +52,147 @@ public class BattleEngine {
         currentRound++;
         ui.displayBattleStatus(getAliveCombatants());
 
-        // Queue player action first
-        queuedPlayerAction = null;
-        queuedPlayerTargets = new ArrayList<>();
+        Player player = null;
 
         for (Combatant combatant : combatants) {
             if (combatant instanceof Player && combatant.isAlive()) {
-                Player player = (Player) combatant;
-                if (player.getSkillCooldown() > 0) {
-                    player.decrementCooldown();
-                }
-                boolean validChoice = false;
+                player = (Player) combatant;
+                break;
+            }
+        }
 
-                while (!validChoice) {
-                    ui.displayActionMenu(player);
-                    int choice = ui.getPlayerChoice();
+        if (player != null) {
+            player.clearQueuedTurn();
+            player.setHasActedThisRound(false);
 
-                    if (choice == 1) {
+            if (player.getSkillCooldown() > 0) {
+                player.decrementCooldown();
+            }
+
+            boolean validChoice = false;
+
+            while (!validChoice) {
+                ui.displayActionMenu(player);
+                int choice = ui.getPlayerChoice();
+
+                if (choice == 1) {
+                    List<Combatant> possibleTargets = selectEnemyTargets();
+
+                    if (!possibleTargets.isEmpty()) {
+                        ui.displayTargetOptions(possibleTargets);
+                        Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
+
+                        List<Combatant> targets = new ArrayList<>();
+                        targets.add(chosenTarget);
+
+                        player.setQueuedTurn(new BasicAttack(), targets);
+                        validChoice = true;
+                    }
+
+                } else if (choice == 2) {
+                    player.setQueuedTurn(new DefendAction(), new ArrayList<>());
+                    player.takeTurn(this);   // immediate execution
+                    validChoice = true;
+
+                } else if (choice == 3) {
+                    List<Item> items = player.getInventory().getItems();
+
+                    if (items.isEmpty()) {
+                        ui.showMessage("You have no items. Choose another action.");
+                        System.out.println();
+                        continue;
+                    }
+
+                    boolean itemChosen = false;
+
+                    while (!itemChosen) {
+                        ui.displayInventoryOptions(items);
+                        int itemChoice = ui.getInventoryChoice(items.size());
+
+                        if (itemChoice == items.size() + 1) {
+                            System.out.println();
+                            break;
+                        }
+
+                        Item selectedItem = items.get(itemChoice - 1);
+                        List<Combatant> itemTargets = new ArrayList<>();
+
+                        if (selectedItem instanceof PowerStone) {
+                            Action specialSkill = player.getSpecialSkill();
+
+                            if (specialSkill instanceof ArcaneBlastAction) {
+                                itemTargets = selectEnemyTargets();
+                            } else {
+                                List<Combatant> possibleTargets = selectEnemyTargets();
+                                if (!possibleTargets.isEmpty()) {
+                                    ui.displayTargetOptions(possibleTargets);
+                                    Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
+                                    itemTargets.add(chosenTarget);
+                                }
+                            }
+                        }
+
+                        player.setQueuedTurn(new UseItemAction(selectedItem), itemTargets);
+                        player.takeTurn(this);   // immediate execution
+                        itemChosen = true;
+                        validChoice = true;
+                    }
+
+                } else if (choice == 4) {
+                    if (player.getSkillCooldown() > 0) {
+                        ui.showMessage("Special Skill is on cooldown. Choose another action.");
+                        System.out.println();
+                        continue;
+                    }
+
+                    Action specialSkill = player.getSpecialSkill();
+
+                    if (specialSkill instanceof ArcaneBlastAction) {
+                        player.setQueuedTurn(specialSkill, selectEnemyTargets());
+                        validChoice = true;
+                    } else {
                         List<Combatant> possibleTargets = selectEnemyTargets();
+
                         if (!possibleTargets.isEmpty()) {
                             ui.displayTargetOptions(possibleTargets);
                             Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
-                            queuedPlayerTargets.add(chosenTarget);
-                            queuedPlayerAction = new BasicAttack();
+
+                            List<Combatant> targets = new ArrayList<>();
+                            targets.add(chosenTarget);
+
+                            player.setQueuedTurn(specialSkill, targets);
                             validChoice = true;
-                        }
-
-                    } else if (choice == 2) {
-                        Action action = new DefendAction();
-                        action.execute(player, new ArrayList<>());
-                        ui.showMessage(player.getName() + " is defending! (+10 DEF)");
-                        queuedPlayerAction = null;
-                        validChoice = true;
-
-                    } else if (choice == 3) {
-                        List<Item> items = player.getInventory().getItems();
-
-                        if (items.isEmpty()) {
-                            ui.showMessage("You have no items. Choose another action.");
-                            System.out.println();
-                            continue;
-                        }
-
-                        boolean itemChosen = false;
-                        while (!itemChosen) {
-                            ui.displayInventoryOptions(items);
-                            int itemChoice = ui.getInventoryChoice(items.size());
-
-                            if (itemChoice == items.size() + 1) {
-                                System.out.println();
-                                break; // Back
-                            }
-
-                            Item selectedItem = items.get(itemChoice - 1);
-                            List<Combatant> itemTargets = new ArrayList<>();
-
-                            if (selectedItem instanceof PowerStone) {
-                                Action specialSkill = player.getSpecialSkill();
-
-                                if (specialSkill instanceof ArcaneBlastAction) {
-                                    itemTargets = selectEnemyTargets();
-                                } else {
-                                    List<Combatant> possibleTargets = selectEnemyTargets();
-                                    if (!possibleTargets.isEmpty()) {
-                                        ui.displayTargetOptions(possibleTargets);
-                                        Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
-                                        itemTargets.add(chosenTarget);
-                                    }
-                                }
-                            }
-                            
-                            ui.showMessage(player.getName() + " used " + selectedItem.getName() + "!");
-                            Action action = new UseItemAction(selectedItem);
-                            action.execute(player, itemTargets);
-                            
-                            queuedPlayerAction = null;
-                            queuedPlayerTargets.clear();
-
-                            itemChosen = true;
-                            validChoice = true;
-                        }
-                    } else if (choice == 4) {
-                        if (player.getSkillCooldown() > 0) {
-                            ui.showMessage("Special Skill is on cooldown. Choose another action.");
-                            System.out.println(); 
-                            continue;
-                        }
-
-                        Action specialSkill = player.getSpecialSkill();
-
-                        if (specialSkill instanceof ArcaneBlastAction) {
-                            queuedPlayerTargets = selectEnemyTargets();
-                            queuedPlayerAction = specialSkill;
-                            validChoice = true;
-                        } else {
-                            List<Combatant> possibleTargets = selectEnemyTargets();
-                            if (!possibleTargets.isEmpty()) {
-                                ui.displayTargetOptions(possibleTargets);
-                                Combatant chosenTarget = ui.getTargetChoice(possibleTargets);
-                                queuedPlayerTargets.clear();
-                                queuedPlayerTargets.add(chosenTarget);
-                                queuedPlayerAction = specialSkill;
-                                validChoice = true;
-                            }
                         }
                     }
                 }
-
-                break;
             }
         }
 
         List<Combatant> turnOrder = turnOrderStrategy.getOrder(getAliveCombatants());
 
         for (Combatant actor : turnOrder) {
-            if (actor.isAlive()) {
-                processTurn(actor);
+            if (!actor.isAlive()) {
+                continue;
             }
+
+            if (actor instanceof Player) {
+                Player currentPlayer = (Player) actor;
+
+                if (currentPlayer.hasActedThisRound()) {
+                    continue;
+                }
+            }
+
+            processTurn(actor);
         }
     }
 
     public void processTurn(Combatant actor) {
 
-        if (actor.canAct()) {
-
-            if (actor instanceof Player) {
-                Player player = (Player) actor;
-
-                if (queuedPlayerAction != null) {
-                    queuedPlayerAction.execute(actor, queuedPlayerTargets);
-
-                    if (queuedPlayerAction instanceof BasicAttack && !queuedPlayerTargets.isEmpty()) {
-                        ui.showMessage(actor.getName() + " attacked " + queuedPlayerTargets.get(0).getName() + "!");
-                    } 
-                    else if (queuedPlayerAction instanceof ShieldBashAction && !queuedPlayerTargets.isEmpty()) {
-                        ui.showMessage(actor.getName() + " used Shield Bash on " + queuedPlayerTargets.get(0).getName() + "!");
-                        player.resetSkillCooldown(3);
-                    } 
-                    else if (queuedPlayerAction instanceof ArcaneBlastAction) {
-                        ui.showMessage(actor.getName() + " used Arcane Blast!");
-                        player.resetSkillCooldown(3);
-                    }
-                }
-
-            } else if (actor instanceof Enemy) {
-                List<Combatant> targets = selectPlayerTargets();
-                if (!targets.isEmpty()) {
-                    Combatant chosenTarget = targets.get(0);
-
-                    List<Combatant> selectedTarget = new ArrayList<>();
-                    selectedTarget.add(chosenTarget);
-
-                    Action action = new BasicAttack();
-                    action.execute(actor, selectedTarget);
-
-                    ui.showMessage(actor.getName() + " attacked " + chosenTarget.getName() + "!");
-                }
-            }
-
-        } else {
-            ui.showMessage(actor.getName() + " is stunned and cannot act!");
-        }
-
-        // ALWAYS RUN THIS
+        actor.takeTurn(this);
         actor.endTurnStatusEffect();
         spawnBackupIfNeeded();
+
     }
 
     public List<Combatant> selectEnemyTargets() {
