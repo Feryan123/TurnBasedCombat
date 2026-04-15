@@ -83,11 +83,7 @@ public abstract class Combatant{
 		}
 	}
 
-	public void takeTurn(BattleEngine engine) {
-		engine.processRound();
-		if (!canAct()) return; 
-		engine.processTurn(this);
-	}
+	public abstract void takeTurn(BattleEngine engine);
 
 	public boolean isAlive() { return currentHP > 0; }
 	
