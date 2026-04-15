@@ -2,9 +2,9 @@
 
 🧙‍♂️ Turn-Based Combat Arena
 
-A console-based turn-based combat game built in Java, applying Object-Oriented Design (OODP) principles and SOLID design patterns.
+A console-based turn-based combat game built in Java, applying Object-Oriented Design (OOP) principles and SOLID design patterns.
 
-This project was developed as part of SC2002 – Object-Oriented Design & Programming. This README.md is generated with the help of GenerativeAI (Not to be part of the project's grading, but for reference when entering this GitHub page.
+This project was developed as part of SC2002 – Object-Oriented Design & Programming. This README.md is generated with the help of GenerativeAI (Not to be part of the project's grading, but for reference when entering this GitHub page)
 
 
 🎮 Overview
