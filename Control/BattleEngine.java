@@ -134,6 +134,8 @@ public class BattleEngine {
 
                         player.setQueuedTurn(new UseItemAction(selectedItem), itemTargets);
                         player.takeTurn(this);   // immediate execution
+                        player.endTurnStatusEffect();
+                        spawnBackupIfNeeded();
                         itemChosen = true;
                         validChoice = true;
                     }
