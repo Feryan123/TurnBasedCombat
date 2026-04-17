@@ -13,15 +13,17 @@ This system simulates a turn-based battle between a player and enemies, where ea
 
 Players can:
 
-Perform basic attacks
+    Perform basic attacks
 
-Defend
+    Defend
 
-Use items
+    Use items
 
-Activate special skills
+    Activate special skills
 
-while Enemies automatically decide their actions and interact with the player through the same combat system.
+while Enemies:
+
+    Automatically decide their actions and interact with the player through the same combat system.
 
 This design emphasises modularity, extensibility, and clean separation of concerns using an ECB (Entity-Control-Boundary) architecture.
 
@@ -30,64 +32,64 @@ This design emphasises modularity, extensibility, and clean separation of concer
 
 The project is structured into the following components:
 
-🔹 Control Layer
+    🔹 Control Layer
 
-BattleEngine → Core game loop (handles rounds, turns, win/lose logic)
+        BattleEngine → Core game loop (handles rounds, turns, win/lose logic)
 
-GameController → Sets up and starts the game
+        GameController → Sets up and starts the game
 
-🔹 Boundary Layer
+    🔹 Boundary Layer
 
-GameUI → Handles all user input/output
+        GameUI → Handles all user input/output
 
-🔹 Entity Layer
+    🔹 Entity Layer
 
-Combatant → Base class for all characters
+        Combatant → Base class for all characters
 
-Player, Enemy → Abstract subclasses
+        Player, Enemy → Abstract subclasses
 
-Wizard, Warrior, Goblin, Wolf → Concrete implementations
+        Wizard, Warrior, Goblin, Wolf → Concrete implementations
 
-🔹 Gameplay Components
+    🔹 Gameplay Components
 
-Action → Defines actions like attack, defend, skills
+        Action → Defines actions like attack, defend, skills
 
-Item & Inventory → Item system
+        Item & Inventory → Item system
 
-StatusEffect → Buffs/debuffs (e.g. stun, defense boost)
+        StatusEffect → Buffs/debuffs (e.g. stun, defense boost)
 
-🔹 Strategy Layer
+    🔹 Strategy Layer
 
-TurnOrderStrategy → Determines turn order (e.g. speed-based)
+        TurnOrderStrategy → Determines turn order (e.g. speed-based)
 
-🔹 Level Setup
+    🔹 Level Setup
 
-Level + IEnemyFactory → Handles enemy spawning logic
+        Level + IEnemyFactory → Handles enemy spawning logic
 
 
 🧠 Design Principles Used
 
 ✅ OOP Concepts
 
-Encapsulation → Data hidden inside classes
+    Encapsulation → Data hidden inside classes
 
-Inheritance → Shared behaviour via Combatant
+    Inheritance → Shared behaviour via Combatant
 
-Polymorphism → Actions, items, and enemies interchangeable
+    Polymorphism → Actions, items, and enemies interchangeable
 
-Abstraction → Interfaces and abstract classes
+    Abstraction → Interfaces and abstract classes
 
 ✅ SOLID Principles
 
-SRP → Each class has a single responsibility
+    SRP → Each class has a single responsibility
 
-OCP → Extend via new classes (Actions, Effects, Items)
+    OCP → Extend via new classes (Actions, Effects, Items)
 
-LSP → Subclasses usable as parent types
+    LSP → Subclasses usable as parent types
 
-ISP → Small focused interfaces (Action, Item)
+    ISP → Small focused interfaces (Action, Item)
 
-DIP → Depends on abstractions (TurnOrderStrategy, IEnemyFactory)
+    DIP → Depends on abstractions (TurnOrderStrategy, IEnemyFactory)
 
 
 🚀 How to Run
